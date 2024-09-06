@@ -7,7 +7,7 @@ export default {
       format: 'iife',
       globals: {
         '@capacitor/core': 'capacitorExports',
-        throat: 'throat',
+        'throat': 'throat',
       },
       sourcemap: true,
       inlineDynamicImports: true,

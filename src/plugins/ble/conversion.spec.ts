@@ -1,7 +1,8 @@
 import {
   dataViewToHexString,
   dataViewToNumbers,
-  hexStringToDataView, numbersToDataView,
+  hexStringToDataView,
+  numbersToDataView,
   numberToUUID,
 } from './conversion';
 

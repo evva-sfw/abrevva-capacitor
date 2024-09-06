@@ -5,7 +5,9 @@
  * @return string, e.g. '0000180d-0000-1000-8000-00805f9b34fb'
  */
 export function numberToUUID(value: number): string {
-  return `0000${value.toString(16).padStart(4, '0')}-0000-1000-8000-00805f9b34fb`;
+  return `0000${value
+    .toString(16)
+    .padStart(4, '0')}-0000-1000-8000-00805f9b34fb`;
 }
 
 /**
@@ -26,7 +28,7 @@ export function dataViewToNumbers(value: DataView): number[] {
  */
 export function dataViewToHexString(value: DataView): string {
   return dataViewToNumbers(value)
-    .map((n) => {
+    .map(n => {
       let s = n.toString(16);
       if (s.length == 1) {
         s = '0' + s;
@@ -56,7 +58,7 @@ export function hexStringToDataView(value: string): DataView {
   const numbers: number[] = value
     .trim()
     .split(' ')
-    .filter((e) => e !== '')
-    .map((s) => parseInt(s, 16));
+    .filter(e => e !== '')
+    .map(s => parseInt(s, 16));
   return numbersToDataView(numbers);
 }
