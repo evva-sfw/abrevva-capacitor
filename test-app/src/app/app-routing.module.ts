@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { CryptoComponent } from './crypto/crypto.component';
+
 import { BleComponent } from './ble/ble.component';
+import { CryptoComponent } from './crypto/crypto.component';
 
 const routes: Routes = [
   {
@@ -16,12 +17,12 @@ const routes: Routes = [
   },
   {
     path: 'crypto',
-    component: CryptoComponent
+    component: CryptoComponent,
   },
   {
     path: 'ble',
-    component: BleComponent 
-  }
+    component: BleComponent,
+  },
 ];
 
 @NgModule({
@@ -30,4 +31,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
