@@ -1,21 +1,20 @@
 import { Component } from '@angular/core';
-import { AbrevvaBLEClient, ScanResult } from '@evva-sfw/abrevva-capacitor'
 import { ChangeDetectorRef } from '@angular/core';
+import { AbrevvaBLEClient, ScanResult } from '@evva-sfw/abrevva-capacitor';
 
 @Component({
   selector: 'app-ble',
   templateUrl: './ble.component.html',
-  styleUrls: ['./ble.component.css']
+  styleUrls: ['./ble.component.css'],
 })
 export class BleComponent {
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
-  results: ScanResult[] = []
+  results: ScanResult[] = [];
   async onInit() {
     AbrevvaBLEClient.initialize({ androidNeverForLocation: true });
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   async startScan(event: any) {
     const timeout = 5_000;
 
@@ -24,21 +23,31 @@ export class BleComponent {
       { timeout: timeout },
       (result: ScanResult) => {
         this.results.push(result);
-        result.device.deviceId
+        result.device.deviceId;
         this.changeDetectorRef.detectChanges();
-      })
+      },
+    );
     setTimeout(() => {
       event.target.complete();
     }, timeout);
   }
 
   async disengage(device: ScanResult) {
-    AbrevvaBLEClient.connect(device.device.deviceId,
-      (device) => {
+    AbrevvaBLEClient.connect(
+      device.device.deviceId,
+      device => {
         console.log(`disconnected: ${device}`);
       },
-      { timeout: 1_000 });
+      { timeout: 1_000 },
+    );
 
-    AbrevvaBLEClient.disengage("deviveId", "mobileId", "mobileDeviceKey", "mobileGroupId", "mobileAccessData", true);
+    AbrevvaBLEClient.disengage(
+      'deviveId',
+      'mobileId',
+      'mobileDeviceKey',
+      'mobileGroupId',
+      'mobileAccessData',
+      true,
+    );
   }
 }

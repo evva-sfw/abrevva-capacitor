@@ -5,8 +5,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { CryptoComponent } from './crypto/crypto.component';
 import { BleComponent } from './ble/ble.component';
+import { CryptoComponent } from './crypto/crypto.component';
 
 @NgModule({
   declarations: [AppComponent, CryptoComponent, BleComponent],

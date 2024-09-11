@@ -8,7 +8,7 @@ import { AbrevvaCrypto } from '@evva-sfw/abrevva-capacitor';
   styleUrls: ['./crypto.component.css'],
 })
 export class CryptoComponent {
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   output = '';
   funcName = '';

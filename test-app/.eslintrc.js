@@ -1,22 +1,20 @@
-{
-  "root": true,
-  "overrides": [
+module.exports = {
+  root: true,
+  overrides: [
     {
-      "files": ["*.ts"],
-      "parserOptions": {
-        "project": ["tsconfig.json", "tsconfig.app.json"],
-        "createDefaultProgram": true
+      files: ["*.ts"],
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ["tsconfig.json", "tsconfig.app.json"],
+        createDefaultProgram: true,
       },
-      "extends": [
+      extends: [
         "plugin:prettier/recommended",
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
       ],
-      "plugins": [
-        "unused-imports",
-        "simple-import-sort"
-      ],
-      "rules": {
+      plugins: ["unused-imports", "simple-import-sort"],
+      rules: {
         "max-len": "off",
         "no-console": "off",
         "no-bitwise": "off",
@@ -31,31 +29,31 @@
         "@angular-eslint/component-class-suffix": [
           "error",
           {
-            "suffixes": ["Page", "Component"]
-          }
+            suffixes: ["Page", "Component"],
+          },
         ],
         "@angular-eslint/component-selector": [
           "error",
           {
-            "type": "element",
-            "prefix": "app",
-            "style": "kebab-case"
-          }
+            type: "element",
+            prefix: "app",
+            style: "kebab-case",
+          },
         ],
         "@angular-eslint/directive-selector": [
           "error",
           {
-            "type": "attribute",
-            "prefix": "app",
-            "style": "camelCase"
-          }
-        ]
-      }
+            type: "attribute",
+            prefix: "app",
+            style: "camelCase",
+          },
+        ],
+      },
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
-      "rules": {}
-    }
-  ]
-}
+      files: ["*.html"],
+      extends: ["plugin:@angular-eslint/template/recommended"],
+      rules: {},
+    },
+  ],
+};

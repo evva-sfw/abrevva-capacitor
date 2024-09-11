@@ -36,7 +36,7 @@
     "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
     "eslint": "eslint . --ext ts",
-    "prettier": "prettier \"**/*.{css,html,ts,js,java}\"",
+    "prettier": "prettier \"**/*.ts\"",
     "swiftlint": "node-swiftlint",
     "docgen": "npm run docgen-ble && npm run docgen-crypto",
     "docgen-ble": "docgen --api AbrevvaBLEInterface --output-readme README.md --output-json dist/abrevva-ble-api.json",
