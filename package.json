@@ -1,5 +1,5 @@
 {
-  "name": "@evva-sfw/capacitor-abrevva",
+  "name": "@evva-sfw/abrevva-capacitor",
   "version": "1.0.0",
   "type": "module",
   "description": "Collection of tools to work with electronic EVVA access components.",

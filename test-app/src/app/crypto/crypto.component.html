@@ -7,9 +7,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
 <ion-list style="text-align:center">
-        <ion-button expand="block" fill="clear" [routerLink]="['/ble']">Ble</ion-button>
-        <ion-button expand="block" fill="clear" [routerLink]="['/crypto']">Crypto</ion-button>
+        <ion-text>
+        <h1>{{funcName}}</h1>
+          {{output}}
+        </ion-text>
+        <ion-button expand="block" fill="clear" (click)="generateKeyPair()">generateKeyPair()</ion-button>
+        <ion-button expand="block" fill="clear" (click)="random()">random()</ion-button>
 </ion-list>
 </ion-content>

@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title style="text-align:center"> Abrevva Test App </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="startScan($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-grid>
+    <ion-row *ngFor="let result of results">
+        <ion-card style="width: 100%" (click)="disengage(result)">
+          <ion-card-header>
+            <ion-card-title style="text-align: center">{{ result.device.deviceId }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+    </ion-row>
+  </ion-grid>
+</ion-content>
