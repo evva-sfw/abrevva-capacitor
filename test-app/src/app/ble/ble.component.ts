@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbrevvaBLEClient, ScanResult, RequestBleDeviceOptions } from '@evva-sfw/abrevva-capacitor'
+import { AbrevvaBLEClient, ScanResult } from '@evva-sfw/abrevva-capacitor'
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
@@ -11,10 +11,11 @@ export class BleComponent {
   constructor(private readonly changeDetectorRef: ChangeDetectorRef) { }
 
   results: ScanResult[] = []
-  async ngOnInit() {
+  async onInit() {
     AbrevvaBLEClient.initialize({ androidNeverForLocation: true });
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   async startScan(event: any) {
     const timeout = 5_000;
 
@@ -34,7 +35,7 @@ export class BleComponent {
   async disengage(device: ScanResult) {
     AbrevvaBLEClient.connect(device.device.deviceId,
       (device) => {
-        console.log("onDisconnect called");
+        console.log(`disconnected: ${device}`);
       },
       { timeout: 1_000 });
 
