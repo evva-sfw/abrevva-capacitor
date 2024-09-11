@@ -29,6 +29,7 @@ jobs:
             node_modules
           key: node-modules
       - run: npm i
+      - run: cd test-app && npm i
       - run: npm run lint
       - run: npm pack
       - name: Upload Artifact
