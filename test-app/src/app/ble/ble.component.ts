@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { AbrevvaBLEClient, ScanResult } from '@evva-sfw/abrevva-capacitor';
 
@@ -7,11 +7,12 @@ import { AbrevvaBLEClient, ScanResult } from '@evva-sfw/abrevva-capacitor';
   templateUrl: './ble.component.html',
   styleUrls: ['./ble.component.css'],
 })
-export class BleComponent {
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+export class BleComponent implements OnInit {
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) { }
 
   results: ScanResult[] = [];
-  async onInit() {
+
+  async ngOnInit() {
     AbrevvaBLEClient.initialize({ androidNeverForLocation: true });
   }
 
