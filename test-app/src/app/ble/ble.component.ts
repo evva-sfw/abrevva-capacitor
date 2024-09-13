@@ -8,7 +8,7 @@ import { AbrevvaBLEClient, ScanResult } from '@evva-sfw/abrevva-capacitor';
   styleUrls: ['./ble.component.css'],
 })
 export class BleComponent implements OnInit {
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
   results: ScanResult[] = [];
 
