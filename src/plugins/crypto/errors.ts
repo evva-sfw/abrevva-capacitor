@@ -1,6 +1,6 @@
 export const enum AbrevvaCryptoError {
   encryptCryptoError = "EncryptCryptoError",
-  encryptEmptyResultError = "EncryptCryptoError",
+  encryptEmptyResultError = "EncryptEmptyResultError",
   encryptInvalidArgumentError = "EncryptInvalidArgumentError",
   encryptFileCryptoError = "EncryptFileCryptoError",
   encryptFileInvalidArgumentError = "EncryptFileInvalidArgumentError",
@@ -25,5 +25,5 @@ export const enum AbrevvaCryptoError {
   randomError = "RandomError",
   deriveInvalidArgumentError = "DeriveInvalidArgumentError",
   deriveEmptyResultError = "DeriveEmptyResultError",
-  deriveCryptoError = "DeriveCryptoError"
+  deriveCryptoError = "DeriveCryptoError",
 }

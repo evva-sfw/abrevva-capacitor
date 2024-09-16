@@ -1,4 +1,4 @@
-import throat from 'throat';
+import throat from "throat";
 
 type Queue = <T>(fn: () => Promise<T>) => Promise<T>;
 

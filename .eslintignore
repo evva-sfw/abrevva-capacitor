@@ -1,2 +1,5 @@
-build
-dist
+node_modules
+test-app/
+dist/
+ios/
+android/

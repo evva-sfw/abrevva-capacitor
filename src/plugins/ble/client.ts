@@ -1,4 +1,4 @@
-import type { PluginListenerHandle } from '@capacitor/core';
+import type { PluginListenerHandle } from "@capacitor/core";
 
 import { dataViewToHexString, hexStringToDataView } from "./conversion";
 import type {
@@ -8,11 +8,11 @@ import type {
   TimeoutOptions,
   ReadResult,
   ScanResult,
-  ScanResultInternal
-} from './definitions';
-import { AbrevvaBLE } from './plugin';
-import { getQueue } from './queue';
-import { validateUUID } from './validators';
+  ScanResultInternal,
+} from "./definitions";
+import { AbrevvaBLE } from "./plugin";
+import { getQueue } from "./queue";
+import { validateUUID } from "./validators";
 
 export interface AbrevvaBLEClientInterface {
   initialize(options?: InitializeOptions): Promise<void>;
@@ -28,10 +28,28 @@ export interface AbrevvaBLEClientInterface {
   connect(deviceId: string, onDisconnect?: (deviceId: string) => void, options?: TimeoutOptions): Promise<void>;
   disconnect(deviceId: string): Promise<void>;
   read(deviceId: string, service: string, characteristic: string, options?: TimeoutOptions): Promise<DataView>;
-  write(deviceId: string, service: string, characteristic: string, value: DataView, options?: TimeoutOptions): Promise<void>;
+  write(
+    deviceId: string,
+    service: string,
+    characteristic: string,
+    value: DataView,
+    options?: TimeoutOptions,
+  ): Promise<void>;
   signalize(deviceId: string): Promise<void>;
-  disengage(deviceId: string, mobileId: string, mobileDeviceKey: string, mobileGroupId: string, mobileAccessData: string, isPermanentRelease: boolean): Promise<string>;
-  startNotifications(deviceId: string, service: string, characteristic: string, callback: (value: DataView) => void): Promise<void>;
+  disengage(
+    deviceId: string,
+    mobileId: string,
+    mobileDeviceKey: string,
+    mobileGroupId: string,
+    mobileAccessData: string,
+    isPermanentRelease: boolean,
+  ): Promise<string>;
+  startNotifications(
+    deviceId: string,
+    service: string,
+    characteristic: string,
+    callback: (value: DataView) => void,
+  ): Promise<void>;
   stopNotifications(deviceId: string, service: string, characteristic: string): Promise<void>;
 }
 
@@ -103,7 +121,7 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
     options = this.validateRequestBleDeviceOptions(options);
     await this.queue(async () => {
       await this.scanListener?.remove();
-      this.scanListener = AbrevvaBLE.addListener('onScanResult', (resultInternal: ScanResultInternal) => {
+      this.scanListener = AbrevvaBLE.addListener("onScanResult", (resultInternal: ScanResultInternal) => {
         const result: ScanResult = {
           ...resultInternal,
           manufacturerData: this.convertObject(resultInternal.manufacturerData),
@@ -165,13 +183,13 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
     service: string,
     characteristic: string,
     value: DataView,
-    options?: TimeoutOptions
+    options?: TimeoutOptions,
   ): Promise<void> {
     service = validateUUID(service);
     characteristic = validateUUID(characteristic);
     return this.queue(async () => {
       if (!value?.buffer) {
-        throw new Error('Invalid data.');
+        throw new Error("Invalid data.");
       }
       const writeValue = dataViewToHexString(value);
       await AbrevvaBLE.write({
@@ -186,8 +204,8 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
 
   async signalize(deviceId: string): Promise<void> {
     return await this.queue(async () => {
-      return AbrevvaBLE.signalize({deviceId})
-    })
+      return AbrevvaBLE.signalize({ deviceId });
+    });
   }
 
   async disengage(
@@ -198,20 +216,26 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
     mobileAccessData: string,
     isPermanentRelease: boolean,
     onConnect?: (address: string) => void,
-    onDisconnect?: (address: string) => void
+    onDisconnect?: (address: string) => void,
   ): Promise<string> {
     return await this.queue(async () => {
       if (onConnect) {
         await this.eventListeners.get(`connected|${deviceId}`)?.remove();
-        this.eventListeners.set(`connected|${deviceId}`, AbrevvaBLE.addListener(`connected|${deviceId}`, () => {
-          onConnect(deviceId)
-        }));
+        this.eventListeners.set(
+          `connected|${deviceId}`,
+          AbrevvaBLE.addListener(`connected|${deviceId}`, () => {
+            onConnect(deviceId);
+          }),
+        );
       }
       if (onDisconnect) {
         await this.eventListeners.get(`disconnected|${deviceId}`)?.remove();
-        this.eventListeners.set(`disconnected|${deviceId}`, AbrevvaBLE.addListener(`disconnected|${deviceId}`, () => {
-          onDisconnect(deviceId)
-        }));
+        this.eventListeners.set(
+          `disconnected|${deviceId}`,
+          AbrevvaBLE.addListener(`disconnected|${deviceId}`, () => {
+            onDisconnect(deviceId);
+          }),
+        );
       }
 
       const result = await AbrevvaBLE.disengage({
@@ -220,18 +244,18 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
         mobileDeviceKey,
         mobileGroupId,
         mobileAccessData,
-        isPermanentRelease
-      })
+        isPermanentRelease,
+      });
 
       return result.value;
-    })
+    });
   }
 
   async startNotifications(
     deviceId: string,
     service: string,
     characteristic: string,
-    callback: (value: DataView) => void
+    callback: (value: DataView) => void,
   ): Promise<void> {
     service = validateUUID(service);
     characteristic = validateUUID(characteristic);
@@ -276,7 +300,7 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
   }
 
   private convertValue(value?: Data): DataView {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       return hexStringToDataView(value);
     } else if (value === undefined) {
       return new DataView(new ArrayBuffer(0));

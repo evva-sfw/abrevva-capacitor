@@ -4,7 +4,7 @@
  * @param uuid
  */
 export function validateUUID(uuid: any): string {
-  if (typeof uuid !== 'string') {
+  if (typeof uuid !== "string") {
     throw new Error(`Invalid UUID type ${typeof uuid}. Expected string.`);
   }
 
@@ -14,7 +14,7 @@ export function validateUUID(uuid: any): string {
 
   if (!is128BitUuid) {
     throw new Error(
-      `Invalid UUID format ${uuid}. Expected 128 bit string (e.g. "0000180d-0000-1000-8000-00805f9b34fb").`
+      `Invalid UUID format ${uuid}. Expected 128 bit string (e.g. "0000180d-0000-1000-8000-00805f9b34fb").`,
     );
   }
 

@@ -1,6 +1,6 @@
-import { getQueue } from './queue';
+import { getQueue } from "./queue";
 
-describe('queue', () => {
+describe("queue", () => {
   let sequenceOfEvents: string[] = [];
 
   const job = (name: string): Promise<void> => {
@@ -17,15 +17,15 @@ describe('queue', () => {
     sequenceOfEvents = [];
   });
 
-  it('should run jobs in parallel without queue', async () => {
+  it("should run jobs in parallel without queue", async () => {
     const queue = getQueue(false);
-    await Promise.all([queue(() => job('a')), queue(() => job('b'))]);
-    expect(sequenceOfEvents).toEqual(['a started', 'b started', 'a done', 'b done']);
+    await Promise.all([queue(() => job("a")), queue(() => job("b"))]);
+    expect(sequenceOfEvents).toEqual(["a started", "b started", "a done", "b done"]);
   });
 
-  it('should run jobs in sequence with queue', async () => {
+  it("should run jobs in sequence with queue", async () => {
     const queue = getQueue(true);
-    await Promise.all([queue(() => job('a')), queue(() => job('b'))]);
-    expect(sequenceOfEvents).toEqual(['a started', 'a done', 'b started', 'b done']);
+    await Promise.all([queue(() => job("a")), queue(() => job("b"))]);
+    expect(sequenceOfEvents).toEqual(["a started", "a done", "b started", "b done"]);
   });
 });

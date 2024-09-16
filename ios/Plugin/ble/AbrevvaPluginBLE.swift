@@ -69,7 +69,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
             if UIApplication.shared.canOpenURL(settingsURL) {
                 UIApplication.shared.open(settingsURL, completionHandler: { success in
                     call.resolve([
-                        "value": success,
+                        "value": success
                     ])
                 })
             } else {
@@ -330,7 +330,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
 
     private func getBleDeviceDict(_ device: BleDevice) -> [String: String] {
         var bleDevice = [
-            "deviceId": device.getAddress(),
+            "deviceId": device.getAddress()
         ]
         if device.getName() != nil {
             bleDevice["name"] = device.getName()
@@ -349,7 +349,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
             "txPower": advertisementData[CBAdvertisementDataTxPowerLevelKey] ?? 127,
             "uuids": (advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] ?? []).map { uuid -> String in
                 return CBUUIDToString(uuid)
-            },
+            }
         ]
 
         let localName = advertisementData[CBAdvertisementDataLocalNameKey] as? String

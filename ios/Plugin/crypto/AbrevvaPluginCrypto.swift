@@ -54,7 +54,7 @@ public class AbrevvaPluginCrypto: CAPPlugin {
         }
         call.resolve([
             "cipherText": [UInt8](ct[..<pt.count]).toHexString(),
-            "authTag": [UInt8](ct[pt.count...]).toHexString(),
+            "authTag": [UInt8](ct[pt.count...]).toHexString()
         ])
     }
 
@@ -85,7 +85,7 @@ public class AbrevvaPluginCrypto: CAPPlugin {
         }
         call.resolve([
             "plainText": pt,
-            "authOk": true,
+            "authOk": true
         ])
     }
 
@@ -165,7 +165,7 @@ public class AbrevvaPluginCrypto: CAPPlugin {
 
         call.resolve([
             "privateKey": keyPair[0].base64EncodedString(),
-            "publicKey": keyPair[1].base64EncodedString(),
+            "publicKey": keyPair[1].base64EncodedString()
         ])
     }
 
