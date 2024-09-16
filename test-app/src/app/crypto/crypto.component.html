@@ -3,17 +3,21 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title style="text-align:center"> Abrevva Test App </ion-title>
+    <ion-title style="text-align: center"> Abrevva Test App</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-<ion-list style="text-align:center">
-        <ion-text>
-        <h1>{{funcName}}</h1>
-          {{output}}
-        </ion-text>
-        <ion-button expand="block" fill="clear" (click)="generateKeyPair()">generateKeyPair()</ion-button>
-        <ion-button expand="block" fill="clear" (click)="random()">random()</ion-button>
-</ion-list>
+  <ion-list style="text-align: center">
+    <ion-text>
+      <h1>{{ funcName }}</h1>
+      {{ output }}
+    </ion-text>
+    <ion-button expand="block" fill="clear" (click)="generateKeyPair()"
+      >generateKeyPair()</ion-button
+    >
+    <ion-button expand="block" fill="clear" (click)="random()"
+      >random()</ion-button
+    >
+  </ion-list>
 </ion-content>

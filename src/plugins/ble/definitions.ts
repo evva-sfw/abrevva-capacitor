@@ -1,4 +1,4 @@
-import type { PluginListenerHandle } from '@capacitor/core';
+import type { PluginListenerHandle } from "@capacitor/core";
 
 export interface InitializeOptions {
   androidNeverForLocation?: boolean;
@@ -107,18 +107,9 @@ export interface AbrevvaBLEInterface {
   openAppSettings(): Promise<void>;
   requestLEScan(options?: RequestBleDeviceOptions): Promise<void>;
   stopLEScan(): Promise<void>;
-  addListener(
-    eventName: 'onEnabledChanged',
-    listenerFunc: (result: BooleanResult) => void,
-  ): PluginListenerHandle;
-  addListener(
-    eventName: string,
-    listenerFunc: (event: ReadResult) => void,
-  ): PluginListenerHandle;
-  addListener(
-    eventName: 'onScanResult',
-    listenerFunc: (result: ScanResultInternal) => void,
-  ): PluginListenerHandle;
+  addListener(eventName: "onEnabledChanged", listenerFunc: (result: BooleanResult) => void): PluginListenerHandle;
+  addListener(eventName: string, listenerFunc: (event: ReadResult) => void): PluginListenerHandle;
+  addListener(eventName: "onScanResult", listenerFunc: (result: ScanResultInternal) => void): PluginListenerHandle;
   connect(options: DeviceIdOptions & TimeoutOptions): Promise<void>;
   disconnect(options: DeviceIdOptions): Promise<void>;
   read(options: ReadOptions & TimeoutOptions): Promise<ReadResult>;

@@ -1,30 +1,30 @@
-import { numberToUUID } from './conversion';
-import { validateUUID } from './validators';
+import { numberToUUID } from "./conversion";
+import { validateUUID } from "./validators";
 
-describe('Validate UUID', () => {
-  const hr = '0000180d-0000-1000-8000-00805f9b34fb';
-  const hrUpper = '0000180D-0000-1000-8000-00805F9B34FB';
+describe("Validate UUID", () => {
+  const hr = "0000180d-0000-1000-8000-00805f9b34fb";
+  const hrUpper = "0000180D-0000-1000-8000-00805F9B34FB";
 
-  it('should return lowercase UUID', () => {
+  it("should return lowercase UUID", () => {
     const output = validateUUID(hr);
     expect(output).toBe(hr);
   });
 
-  it('should transform uppercase to lowercase UUID', () => {
+  it("should transform uppercase to lowercase UUID", () => {
     const output = validateUUID(hrUpper);
     expect(output).toBe(hr);
   });
 
-  it('should throw an error for a number', () => {
-    expect(() => validateUUID(0x180d)).toThrow('type number');
+  it("should throw an error for a number", () => {
+    expect(() => validateUUID(0x180d)).toThrow("type number");
   });
 
-  it('should validate a transformed number', () => {
+  it("should validate a transformed number", () => {
     const output = validateUUID(numberToUUID(0x180d));
     expect(output).toBe(hr);
   });
 
-  it('should throw an error for a uuid missing a dash', () => {
-    expect(() => validateUUID(hr.replace('-', ''))).toThrow('format');
+  it("should throw an error for a uuid missing a dash", () => {
+    expect(() => validateUUID(hr.replace("-", ""))).toThrow("format");
   });
 });

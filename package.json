@@ -36,7 +36,7 @@
     "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
     "eslint": "eslint . --ext ts",
-    "prettier": "prettier \"**/*.ts\"",
+    "prettier": "prettier \"**/*.java\"",
     "swiftlint": "node-swiftlint",
     "docgen": "npm run docgen-ble && npm run docgen-crypto",
     "docgen-ble": "docgen --api AbrevvaBLEInterface --output-readme README.md --output-json dist/abrevva-ble-api.json",
@@ -58,30 +58,32 @@
     "throat": "^6.0.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.1",
+    "@babel/preset-env": "^7.25.4",
     "@capacitor/android": "5.0.5",
     "@capacitor/cli": "5.0.5",
     "@capacitor/core": "5.0.5",
     "@capacitor/docgen": "0.2.1",
     "@capacitor/ios": "5.0.5",
-    "@ionic/eslint-config": "^0.4.0",
-    "@ionic/prettier-config": "^1.0.1",
     "@ionic/swiftlint-config": "^1.1.2",
-    "eslint": "^7.32.0",
-    "prettier": "~2.3.0",
-    "prettier-plugin-java": "~1.0.2",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.32.0",
-    "swiftlint": "^1.0.1",
-    "typescript": "~4.1.5"
+    "@types/jest": "^29.5.13",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.7.4",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-java": "^2.6.4",
+    "rimraf": "^5.0.10",
+    "rollup": "^3.29.4",
+    "swiftlint": "^1.0.2",
+    "typescript": "~5.3.3"
   },
   "peerDependencies": {
     "@capacitor/core": "^5.0.0"
   },
-  "prettier": "@ionic/prettier-config",
   "swiftlint": "../../swiftlint.config.cjs",
-  "eslintConfig": {
-    "extends": "@ionic/eslint-config/recommended"
-  },
   "capacitor": {
     "ios": {
       "src": "ios"

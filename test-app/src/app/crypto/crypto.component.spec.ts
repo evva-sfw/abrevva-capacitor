@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CryptoComponent } from './crypto.component';
+import { CryptoComponent } from "./crypto.component";
 
-describe('CryptoComponent', () => {
+describe("CryptoComponent", () => {
   let component: CryptoComponent;
   let fixture: ComponentFixture<CryptoComponent>;
 
@@ -15,7 +15,7 @@ describe('CryptoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

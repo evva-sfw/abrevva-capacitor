@@ -1,5 +1,5 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "TestApp",
-	"webDir": "www"
+    "appId": "io.ionic.starter",
+    "appName": "TestApp",
+    "webDir": "www"
 }

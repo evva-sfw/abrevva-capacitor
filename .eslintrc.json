@@ -1,0 +1,51 @@
+{
+    "root": true,
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "rules": {
+        "prettier/prettier": [
+            "error",
+            {
+                "trailingComma": "all",
+                "printWidth": 120,
+                "tabWidth": 2,
+                "useTabs": false
+            }
+        ]
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.js",
+                "*.mjs"
+            ],
+            "parserOptions": {
+                "sourceType": "module",
+                "ecmaVersion": "latest"
+            }
+        },
+        {
+            "files": [
+                "*.cjs"
+            ],
+            "env": {
+                "node": true
+            },
+            "parser": "@babel/eslint-parser"
+        },
+        {
+            "files": [
+                "src/**/*.ts"
+            ],
+            "extends": [
+                "plugin:@typescript-eslint/recommended"
+            ],
+            "parser": "@typescript-eslint/parser",
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off"
+            }
+        }
+    ]
+}

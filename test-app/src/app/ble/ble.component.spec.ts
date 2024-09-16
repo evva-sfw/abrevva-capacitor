@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BleComponent } from './ble.component';
+import { BleComponent } from "./ble.component";
 
-describe('BleComponent', () => {
+describe("BleComponent", () => {
   let component: BleComponent;
   let fixture: ComponentFixture<BleComponent>;
 
@@ -15,7 +15,7 @@ describe('BleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

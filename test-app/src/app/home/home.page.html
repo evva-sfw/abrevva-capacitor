@@ -3,13 +3,17 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title style="text-align:center"> Abrevva Test App </ion-title>
+    <ion-title style="text-align: center"> Abrevva Test App</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<ion-list style="text-align:center">
-        <ion-button expand="block" fill="clear" [routerLink]="['/ble']">Ble</ion-button>
-        <ion-button expand="block" fill="clear" [routerLink]="['/crypto']">Crypto</ion-button>
-</ion-list>
+  <ion-list style="text-align: center">
+    <ion-button expand="block" fill="clear" [routerLink]="['/ble']"
+      >Ble</ion-button
+    >
+    <ion-button expand="block" fill="clear" [routerLink]="['/crypto']"
+      >Crypto</ion-button
+    >
+  </ion-list>
 </ion-content>
