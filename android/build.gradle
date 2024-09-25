@@ -1,8 +1,8 @@
 ext {
     junitVersion = project.hasProperty('junitVersion') ? rootProject.ext.junitVersion : '4.13.2'
     androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
-    androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.1.5'
-    androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.5.1'
+    androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.2.1'
+    androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.6.1'
 }
 
 buildscript {
@@ -48,6 +48,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 repositories {
@@ -64,7 +70,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.core:core-ktx:$coreKtx"
 
-    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "1.0.19"
+    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "1.0.20"
 
     testImplementation "junit:junit:$junitVersion"
 
