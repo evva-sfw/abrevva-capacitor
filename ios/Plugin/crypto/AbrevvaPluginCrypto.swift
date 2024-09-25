@@ -1,6 +1,7 @@
-import AbrevvaSDK
 import Capacitor
 import Foundation
+import AbrevvaSDK
+import CryptoSwift
 
 private enum CryptoError: String {
     case EncryptCryptoError
