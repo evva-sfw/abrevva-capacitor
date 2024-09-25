@@ -22,9 +22,5 @@
 	{
 		"pkg": "@evva-sfw/abrevva-capacitor",
 		"classpath": "com.evva.xesar.abrevva.plugins.capacitor.AbrevvaPluginCrypto"
-	},
-	{
-		"pkg": "@evva-sfw/abrevva-capacitor",
-		"classpath": "com.evva.xesar.abrevva.plugins.capacitor.AbrevvaPluginNFC"
 	}
 ]
