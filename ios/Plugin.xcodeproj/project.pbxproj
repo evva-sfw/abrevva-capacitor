@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		07B3CCBD2B5EA60C00F2C9EA /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B3CCBC2B5EA60C00F2C9EA /* Logging.swift */; };
-		07B3CCC12B5EBC7300F2C9EA /* AbrevvaPluginNFC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B3CCC02B5EBC7300F2C9EA /* AbrevvaPluginNFC.swift */; };
-		07B3CCC42B5EBCB700F2C9EA /* AbrevvaPluginNFC.m in Sources */ = {isa = PBXBuildFile; fileRef = 07B3CCC32B5EBCB700F2C9EA /* AbrevvaPluginNFC.m */; };
-		07B3CCC52B5EBD2D00F2C9EA /* AbrevvaPluginNFC.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B3CCC22B5EBC9600F2C9EA /* AbrevvaPluginNFC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07C03F2D2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C03F2A2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07C03F2E2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C03F2B2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift */; };
 		07C03F2F2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C03F2C2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m */; };
@@ -39,9 +36,6 @@
 		072C8F802B5AAEA2009DC850 /* abrevva_ios_sdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = abrevva_ios_sdk.framework; path = "../../../ios/abrevva-ios-sdk/build/abrevva-ios-sdk.xcframework/ios-arm64/abrevva_ios_sdk.framework"; sourceTree = "<group>"; };
 		072C8F842B5AC1DC009DC850 /* AbrevvaSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AbrevvaSDK.framework; path = "../../../ios/abrevva-ios-sdk/AbrevvaSDK.framework"; sourceTree = "<group>"; };
 		07B3CCBC2B5EA60C00F2C9EA /* Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
-		07B3CCC02B5EBC7300F2C9EA /* AbrevvaPluginNFC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbrevvaPluginNFC.swift; sourceTree = "<group>"; };
-		07B3CCC22B5EBC9600F2C9EA /* AbrevvaPluginNFC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbrevvaPluginNFC.h; sourceTree = "<group>"; };
-		07B3CCC32B5EBCB700F2C9EA /* AbrevvaPluginNFC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AbrevvaPluginNFC.m; sourceTree = "<group>"; };
 		07C03F2A2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbrevvaPluginCrypto.h; sourceTree = "<group>"; };
 		07C03F2B2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbrevvaPluginCrypto.swift; sourceTree = "<group>"; };
 		07C03F2C2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbrevvaPluginCrypto.m; sourceTree = "<group>"; };
@@ -104,16 +98,6 @@
 			path = crypto;
 			sourceTree = "<group>";
 		};
-		07B3CCBA2B5E95D800F2C9EA /* nfc */ = {
-			isa = PBXGroup;
-			children = (
-				07B3CCC02B5EBC7300F2C9EA /* AbrevvaPluginNFC.swift */,
-				07B3CCC22B5EBC9600F2C9EA /* AbrevvaPluginNFC.h */,
-				07B3CCC32B5EBCB700F2C9EA /* AbrevvaPluginNFC.m */,
-			);
-			path = nfc;
-			sourceTree = "<group>";
-		};
 		07B3CCBB2B5EA5EA00F2C9EA /* util */ = {
 			isa = PBXGroup;
 			children = (
@@ -158,7 +142,6 @@
 			children = (
 				07B3CCB82B5E95BF00F2C9EA /* ble */,
 				07B3CCB92B5E95CE00F2C9EA /* crypto */,
-				07B3CCBA2B5E95D800F2C9EA /* nfc */,
 				07B3CCBB2B5EA5EA00F2C9EA /* util */,
 				50ADFF8C201F53D600D50D53 /* Info.plist */,
 			);
@@ -195,7 +178,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				07C03F2D2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h in Headers */,
-				07B3CCC52B5EBD2D00F2C9EA /* AbrevvaPluginNFC.h in Headers */,
 				50ADFF99201F53D600D50D53 /* AbrevvaPluginBLE.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,8 +362,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				07B3CCC12B5EBC7300F2C9EA /* AbrevvaPluginNFC.swift in Sources */,
-				07B3CCC42B5EBCB700F2C9EA /* AbrevvaPluginNFC.m in Sources */,
 				50E1A94820377CB70090CE1A /* AbrevvaPluginBLE.swift in Sources */,
 				07B3CCBD2B5EA60C00F2C9EA /* Logging.swift in Sources */,
 				50ADFFA82020EE4F00D50D53 /* AbrevvaPluginBLE.m in Sources */,
