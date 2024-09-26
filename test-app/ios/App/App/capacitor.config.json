@@ -1,5 +1,13 @@
 {
 	"appId": "io.ionic.starter",
 	"appName": "TestApp",
-	"webDir": "www"
+	"webDir": "www",
+	"packageClassList": [
+		"AppPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"StatusBarPlugin",
+		"AbrevvaPluginBLE",
+		"AbrevvaPluginCrypto"
+	]
 }
