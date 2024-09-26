@@ -1,6 +1,19 @@
-# abrevva-capacitor
+<p align="center">
+  <h1 align="center">Capacitor Abrevva Plugin</h1>
+</p>
 
-Official EVVA Abrevva Capacitor Plugin
+<p align="center">
+  <a href="https://www.npmjs.com/package/@evva-sfw/abrevva-capacitor">
+    <img alt="NPM Version" src="https://img.shields.io/npm/v/%40evva-sfw%2Fabrevva-capacitor"></a>
+  <a href="https://www.npmjs.com/package/@evva-sfw/abrevva-capacitor">
+  <img alt="NPM Downloads" src="https://img.shields.io/npm/dy/%40evva-sfw%2Fabrevva-capacitor"></a>
+  <img alt="GitHub package.json dynamic" src="https://img.shields.io/github/package-json/packageManager/evva-sfw/abrevva-capacitor">
+  <img alt="NPM Unpacked Size (with version)" src="https://img.shields.io/npm/unpacked-size/%40evva-sfw%2Fabrevva-capacitor/latest">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/evva-sfw/abrevva-capacitor">
+  <a href="https://github.com/evva-sfw/abrevva-capacitor/actions"><img alt="GitHub branch check runs" src="https://img.shields.io/github/check-runs/evva-sfw/abrevva-capacitor/main"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-EVVA_License-yellow.svg?color=fce500&logo=data:image/svg+xml;base64,PCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0MCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgNjQwIDEwMjQiPgo8ZyBpZD0iaWNvbW9vbi1pZ25vcmUiPgo8L2c+CjxwYXRoIGZpbGw9IiNmY2U1MDAiIGQ9Ik02MjIuNDIzIDUxMS40NDhsLTMzMS43NDYtNDY0LjU1MmgtMjg4LjE1N2wzMjkuODI1IDQ2NC41NTItMzI5LjgyNSA0NjYuNjY0aDI3NS42MTJ6Ij48L3BhdGg+Cjwvc3ZnPgo=" alt="EVVA License"></a>
+
+</p>
 
 ## Install
 
