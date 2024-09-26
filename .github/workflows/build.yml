@@ -24,4 +24,45 @@ jobs:
         run: npm i
       - name: Run Build
         run: npm run verify:web
- 
+  build_ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Install Swift
+        uses: SwiftyLab/setup-swift@latest
+        with:
+          swift-version: '5.10.0'
+      - name: Cache node_modules
+        id: node-modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+          key: node-modules
+      - name: Cache Pods
+        id: pods
+        uses: actions/cache@v4
+        with:
+          path: |
+            ios/Pods
+          key: pods
+      - name: Cache Xcode
+        uses: irgaly/xcode-cache@v1.7.2
+        with:
+          key: xcode-deriveddata
+          restore-keys: xcode-deriveddata
+      - name: Npm Install
+        run: npm i
+      - name: Run Build
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_15.4.app
+        run: npm run verify:ios
