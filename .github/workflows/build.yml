@@ -74,3 +74,42 @@ jobs:
           -workspace Plugin.xcworkspace \
           -scheme Plugin \
           -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.4'
+  test_android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Install JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Cache node_modules
+        id: node-modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+          key: node-modules
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            android/.gradle
+            ~/.gradle/caches
+          key: gradle
+      - name: Cache Android SDK
+        id: aandroid-sdk
+        uses: actions/cache@v4
+        with:
+          path: ~/Android/Sdk
+          key: android-sdk
+      - name: Npm Install
+        run: npm i
+      - name: Run Build
+        run: npm run verify:android
