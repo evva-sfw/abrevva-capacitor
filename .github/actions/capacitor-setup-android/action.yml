@@ -15,6 +15,7 @@ runs:
     - name: Install Android SDK
       uses: android-actions/setup-android@v3
     - name: Enable KVM
+      shell: bash
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
@@ -34,7 +35,7 @@ runs:
           ~/.gradle/caches
         key: gradle
     - name: Cache Android SDK
-      id: aandroid-sdk
+      id: android-sdk
       uses: actions/cache@v4
       with:
         path: ~/Android/Sdk
