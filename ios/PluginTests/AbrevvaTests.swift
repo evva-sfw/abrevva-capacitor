@@ -1,5 +1,8 @@
-@testable import Plugin
+import Capacitor
+import AbrevvaSDK
 import XCTest
+
+@testable import Plugin
 
 class AbrevvaTests: XCTestCase {
 
