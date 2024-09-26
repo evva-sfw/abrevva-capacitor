@@ -1,0 +1,18 @@
+name: 'capacitor-setup-web'
+description: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Cache node_modules
+      id: node-modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+        key: node-modules
+    - name: Npm Install
+      run: npm i
