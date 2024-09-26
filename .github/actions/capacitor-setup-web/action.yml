@@ -15,4 +15,5 @@ runs:
           node_modules
         key: node-modules
     - name: Npm Install
+      shell: bash
       run: npm i
