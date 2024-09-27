@@ -61,7 +61,6 @@ captures
 .externalNativeBuild
 
 coverage/
-
 test-reports/
-
 security-report.html
+*.tgz
