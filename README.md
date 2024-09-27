@@ -39,10 +39,20 @@ The EVVA Capacitor Plugin is a collection of tools to work with electronical EVV
 
 ## Installation
 
-```bash
-npm install @evva-sfw/abrevva-capacitor@1.0.0
+### Capacitor 6
+
+```
+npm install @evva-sfw/abrevva-capacitor
 npx cap sync
 ```
+
+### Capacitor 5
+
+```
+npm install @evva-sfw/abrevva-capacitor@1.0.1
+npx cap sync
+```
+
 ## Examples
 
 ### Initialize and scan for EVVA components
