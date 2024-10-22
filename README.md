@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">Capacitor Abrevva Plugin</h1>
+  <h1 align="center">Abrevva Capacitor Plugin</h1>
 </p>
 
 <p align="center">
