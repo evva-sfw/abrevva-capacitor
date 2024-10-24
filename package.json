@@ -1,5 +1,5 @@
 {
-  "name": "@evva-sfw/abrevva-capacitor",
+  "name": "@evva/abrevva-capacitor",
   "version": "2.0.1",
   "type": "module",
   "description": "Collection of tools to work with electronic EVVA access components.",
@@ -12,7 +12,7 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin/",
-    "EvvaSfwAbrevvaCapacitor.podspec",
+    "EvvaAbrevvaCapacitor.podspec",
     "LICENSE"
   ],
   "author": "EVVA Sicherheitstechnologie GmbH",

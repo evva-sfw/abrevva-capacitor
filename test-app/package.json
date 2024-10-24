@@ -30,7 +30,7 @@
     "@capacitor/ios": "^6.1.2",
     "@capacitor/keyboard": "^6.0.2",
     "@capacitor/status-bar": "^6.0.1",
-    "@evva-sfw/abrevva-capacitor": "file:..",
+    "@evva/abrevva-capacitor": "file:..",
     "@ionic/angular": "^7.5.8",
     "rxjs": "^7.8.1",
     "tslib": "^2.7.0",
