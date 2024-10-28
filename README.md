@@ -1,18 +1,11 @@
-<p align="center">
-  <h1 align="center">Abrevva Capacitor Plugin</h1>
-</p>
+# Abrevva Capacitor Plugin
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/@evva-sfw/abrevva-capacitor">
-    <img alt="NPM Version" src="https://img.shields.io/npm/v/%40evva-sfw%2Fabrevva-capacitor"></a>
-  <a href="https://www.npmjs.com/package/@evva-sfw/abrevva-capacitor">
-  <img alt="NPM Downloads" src="https://img.shields.io/npm/dy/%40evva-sfw%2Fabrevva-capacitor"></a>
-  <img alt="GitHub package.json dynamic" src="https://img.shields.io/github/package-json/packageManager/evva-sfw/abrevva-capacitor">
-  <img alt="NPM Unpacked Size (with version)" src="https://img.shields.io/npm/unpacked-size/%40evva-sfw%2Fabrevva-capacitor/latest">
-  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/evva-sfw/abrevva-capacitor">
-  <a href="https://github.com/evva-sfw/abrevva-capacitor/actions"><img alt="GitHub branch check runs" src="https://img.shields.io/github/check-runs/evva-sfw/abrevva-capacitor/main"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-EVVA_License-yellow.svg?color=fce500&logo=data:image/svg+xml;base64,PCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0MCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgNjQwIDEwMjQiPgo8ZyBpZD0iaWNvbW9vbi1pZ25vcmUiPgo8L2c+CjxwYXRoIGZpbGw9IiNmY2U1MDAiIGQ9Ik02MjIuNDIzIDUxMS40NDhsLTMzMS43NDYtNDY0LjU1MmgtMjg4LjE1N2wzMjkuODI1IDQ2NC41NTItMzI5LjgyNSA0NjYuNjY0aDI3NS42MTJ6Ij48L3BhdGg+Cjwvc3ZnPgo=" alt="EVVA License"></a>
-</p>
+[![NPM Version](https://img.shields.io/npm/v/%40evva%2Fabrevva-capacitor)](https://www.npmjs.com/package/@evva/abrevva-capacitor)
+[![NPM Downloads](https://img.shields.io/npm/dy/%40evva%2Fabrevva-capacitor)](https://www.npmjs.com/package/@evva/abrevva-capacitor)
+![NPM Unpacked Size (with version)](https://img.shields.io/npm/unpacked-size/%40evva%2Fabrevva-capacitor/latest)
+![GitHub last commit](https://img.shields.io/github/last-commit/evva-sfw/abrevva-capacitor)
+[![GitHub branch check runs](https://img.shields.io/github/check-runs/evva-sfw/abrevva-capacitor/main)]([URL](https://github.com/evva-sfw/abrevva-capacitor/actions))
+[![EVVA License](https://img.shields.io/badge/license-EVVA_License-yellow.svg?color=fce500&logo=data:image/svg+xml;base64,PCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0MCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgNjQwIDEwMjQiPgo8ZyBpZD0iaWNvbW9vbi1pZ25vcmUiPgo8L2c+CjxwYXRoIGZpbGw9IiNmY2U1MDAiIGQ9Ik02MjIuNDIzIDUxMS40NDhsLTMzMS43NDYtNDY0LjU1MmgtMjg4LjE1N2wzMjkuODI1IDQ2NC41NTItMzI5LjgyNSA0NjYuNjY0aDI3NS42MTJ6Ij48L3BhdGg+Cjwvc3ZnPgo=)](LICENSE)
 
 The EVVA Capacitor Plugin is a collection of tools to work with electronical EVVA access components. It allows for scanning and connecting via BLE.
 
@@ -42,14 +35,14 @@ The EVVA Capacitor Plugin is a collection of tools to work with electronical EVV
 ### Capacitor 6
 
 ```
-npm install @evva-sfw/abrevva-capacitor
+npm install @evva/abrevva-capacitor
 npx cap sync
 ```
 
 ### Capacitor 5
 
 ```
-npm install @evva-sfw/abrevva-capacitor@1.0.1
+npm install @evva/abrevva-capacitor@1.0.1
 npx cap sync
 ```
 
@@ -58,7 +51,7 @@ npx cap sync
 ### Initialize and scan for EVVA components
 
 ```typescript
-import { AbrevvaBLEClient, ScanResult } from "@evva-sfw/abrevva-capacitor";
+import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
 
 class ExampleClass {
   private results: ScanResult[];

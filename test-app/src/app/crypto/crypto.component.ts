@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ChangeDetectorRef } from "@angular/core";
-import { AbrevvaCrypto } from "@evva-sfw/abrevva-capacitor";
+import { AbrevvaCrypto } from "@evva/abrevva-capacitor";
 
 @Component({
   selector: "app-crypto",

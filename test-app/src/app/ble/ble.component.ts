@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ChangeDetectorRef } from "@angular/core";
-import { AbrevvaBLEClient, ScanResult } from "@evva-sfw/abrevva-capacitor";
+import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
 
 @Component({
   selector: "app-ble",
