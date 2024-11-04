@@ -14,6 +14,7 @@ CAP_PLUGIN(AbrevvaPluginBLE, "AbrevvaPluginBLE",
     CAP_PLUGIN_METHOD(stopLEScan, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(connect, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(disconnect, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(getManufacturerData, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(read, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(write, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(signalize, CAPPluginReturnPromise);

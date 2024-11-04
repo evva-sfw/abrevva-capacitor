@@ -148,6 +148,18 @@ public class AbrevvaPluginBLE: CAPPlugin {
             }
         }
     }
+    
+    @objc
+    func getManufacturerData(_ call: CAPPluginCall) {
+        guard self.getBleManager(call) != nil else { return }
+        guard let device = self.getDevice(call, checkConnection: false) else { return }
+        
+        if let data = self.getManufacturerDataDict(device) {
+            call.resolve(["value": data])
+        } else {
+            call.reject("getManufacturerData(): failed to parse data")
+        }
+    }
 
     @objc
     func read(_ call: CAPPluginCall) {
@@ -326,6 +338,37 @@ public class AbrevvaPluginBLE: CAPPlugin {
         }
         let characteristicUUID = CBUUID(string: characteristic)
         return (serviceUUID, characteristicUUID)
+    }
+    
+    private func getManufacturerDataDict(_ device: BleDevice) -> [String: Any?]? {
+        do {
+            let result = try device.getManufacturerData()
+            let data = [
+                "companyIdentifier": result.companyIdentifier,
+                "version": result.version,
+                "componentType": result.componentType,
+                "mainFirmwareVersionMajor": result.mainFirmwareVersionMajor,
+                "mainFirmwareVersionMinor": result.mainFirmwareVersionMinor,
+                "mainFirmwareVersionPatch": result.mainFirmwareVersionPatch,
+                "componentHAL": result.componentHAL,
+                "batteryStatus": result.batteryStatus,
+                "mainConstructionMode": result.mainConstructionMode,
+                "subConstructionMode": result.subConstructionMode,
+                "isOnline": result.isOnline,
+                "officeModeEnabled": result.officeModeEnabled,
+                "twoFactorRequired": result.twoFactorRequired,
+                "officeModeActive": result.officeModeActive,
+                "identifier": result.identifier,
+                "reservedBits": result.reservedBits,
+                "subFirmwareVersionMajor": result.subFirmwareVersionMajor,
+                "subFirmwareVersionMinor": result.subFirmwareVersionMinor,
+                "subFirmwareVersionPatch": result.subFirmwareVersionPatch,
+                "subComponentIdentifier": result.subComponentIdentifier,
+            ] as [String : Any?]
+            return data
+        } catch {
+            return nil
+        }
     }
 
     private func getBleDeviceDict(_ device: BleDevice) -> [String: String] {

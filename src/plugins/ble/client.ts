@@ -1,7 +1,7 @@
 import type { PluginListenerHandle } from "@capacitor/core";
 
 import { dataViewToHexString, hexStringToDataView } from "./conversion";
-import type {
+import {
   Data,
   InitializeOptions,
   RequestBleDeviceOptions,
@@ -9,6 +9,7 @@ import type {
   ReadResult,
   ScanResult,
   ScanResultInternal,
+  AbrevvaManufacturerData,
 } from "./definitions";
 import { AbrevvaBLE } from "./plugin";
 import { getQueue } from "./queue";
@@ -27,6 +28,7 @@ export interface AbrevvaBLEClientInterface {
   stopLEScan(): Promise<void>;
   connect(deviceId: string, onDisconnect?: (deviceId: string) => void, options?: TimeoutOptions): Promise<void>;
   disconnect(deviceId: string): Promise<void>;
+  getManufacturerData(deviceId: string): Promise<AbrevvaManufacturerData | null>;
   read(deviceId: string, service: string, characteristic: string, options?: TimeoutOptions): Promise<DataView>;
   write(
     deviceId: string,
@@ -161,6 +163,57 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
   async disconnect(deviceId: string): Promise<void> {
     await this.queue(async () => {
       await AbrevvaBLE.disconnect({ deviceId });
+    });
+  }
+
+  async getManufacturerData(deviceId: string): Promise<AbrevvaManufacturerData | null> {
+    return this.queue(async () => {
+      try {
+        const result = (await AbrevvaBLE.getManufacturerData({ deviceId })).value;
+        const manufacturerData = {} as AbrevvaManufacturerData;
+
+        manufacturerData.deviceId = result.identifier;
+        manufacturerData.version = `${result.mainFirmwareVersionMajor}.${result.mainFirmwareVersionMinor}.${result.mainFirmwareVersionPatch}`;
+
+        switch (result.componentType) {
+          case 100:
+            manufacturerData.componentType = "handle";
+            break; //d
+          case 98:
+            manufacturerData.componentType = "escutcheon";
+            break; //b
+          case 122:
+            manufacturerData.componentType = "cylinder";
+            break; //z
+          case 119:
+            manufacturerData.componentType = "wallreader";
+            break; //w
+          case 109:
+            manufacturerData.componentType = "emzy";
+            break; //m
+          case 105:
+            manufacturerData.componentType = "iobox";
+            break; //i
+          default:
+            manufacturerData.componentType = "unknown";
+            break;
+        }
+        switch (result.batteryStatus) {
+          case 1:
+            manufacturerData.batteryStatus = "battery-full";
+            break;
+          default:
+            manufacturerData.batteryStatus = "battery-empty";
+            break;
+        }
+        manufacturerData.officeModeEnabled = result.officeModeEnabled == 1;
+        manufacturerData.officeModeActive = result.officeModeActive == 1;
+        manufacturerData.twoFactorRequired = result.twoFactorRequired == 1;
+
+        return manufacturerData;
+      } catch (err) {
+        return null;
+      }
     });
   }
 

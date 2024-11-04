@@ -122,10 +122,11 @@ const status = await AbrevvaBLEClient.disengage(
 | **addListener**               | (eventName: "onScanResult", listenerFunc: (result: <a href="#scanresultinternal">ScanResultInternal</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a> |
 | **connect**                   | (options: <a href="#deviceidoptions">DeviceIdOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                                  |
 | **disconnect**                | (options: <a href="#deviceidoptions">DeviceIdOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                 |
+| **getManufacturerData**       | (options: <a href="#deviceidoptions">DeviceIdOptions</a>) =&gt; Promise&lt;<a href="#manufacturerdataresult">ManufacturerDataResult</a>&gt;                                         |
 | **read**                      | (options: <a href="#readoptions">ReadOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;<a href="#readresult">ReadResult</a>&gt;                          |
 | **write**                     | (options: <a href="#writeoptions">WriteOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                                        |
-| **signalize**                 | (options: <a href="#signalizeoptions">SignalizeOptions</a>) =&gt; Promise&lt;void&gt;                                                                                               |
-| **disengage**                 | (options: <a href="#disengageoptions">DisengageOptions</a>) =&gt; Promise&lt;<a href="#stringresult">StringResult</a>&gt;                                                           |
+| **signalize**                 | (options: <a href="#abrevvasignalizeoptions">AbrevvaSignalizeOptions</a>) =&gt; Promise&lt;void&gt;                                                                                 |
+| **disengage**                 | (options: <a href="#abrevvadisengageoptions">AbrevvaDisengageOptions</a>) =&gt; Promise&lt;<a href="#stringresult">StringResult</a>&gt;                                             |
 | **startNotifications**        | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                         |
 | **stopNotifications**         | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                         |
 
@@ -208,6 +209,39 @@ const status = await AbrevvaBLEClient.disengage(
 | **`timeout`** | <code>number</code> |
 
 
+#### ManufacturerDataResult
+
+| Prop        | Type                                                          |
+| ----------- | ------------------------------------------------------------- |
+| **`value`** | <code><a href="#manufacturerdata">ManufacturerData</a></code> |
+
+
+#### ManufacturerData
+
+| Prop                           | Type                |
+| ------------------------------ | ------------------- |
+| **`companyIdentifier`**        | <code>string</code> |
+| **`version`**                  | <code>number</code> |
+| **`componentType`**            | <code>number</code> |
+| **`mainFirmwareVersionMajor`** | <code>number</code> |
+| **`mainFirmwareVersionMinor`** | <code>number</code> |
+| **`mainFirmwareVersionPatch`** | <code>number</code> |
+| **`componentHAL`**             | <code>number</code> |
+| **`batteryStatus`**            | <code>number</code> |
+| **`mainConstructionMode`**     | <code>number</code> |
+| **`subConstructionMode`**      | <code>number</code> |
+| **`isOnline`**                 | <code>number</code> |
+| **`officeModeEnabled`**        | <code>number</code> |
+| **`twoFactorRequired`**        | <code>number</code> |
+| **`officeModeActive`**         | <code>number</code> |
+| **`identifier`**               | <code>string</code> |
+| **`reservedBits`**             | <code>number</code> |
+| **`subFirmwareVersionMajor`**  | <code>number</code> |
+| **`subFirmwareVersionMinor`**  | <code>number</code> |
+| **`subFirmwareVersionPatch`**  | <code>number</code> |
+| **`subComponentIdentifier`**   | <code>string</code> |
+
+
 #### ReadOptions
 
 | Prop                 | Type                |
@@ -227,7 +261,7 @@ const status = await AbrevvaBLEClient.disengage(
 | **`value`**          | <code>string</code> |
 
 
-#### SignalizeOptions
+#### AbrevvaSignalizeOptions
 
 | Prop           | Type                |
 | -------------- | ------------------- |
@@ -241,7 +275,7 @@ const status = await AbrevvaBLEClient.disengage(
 | **`value`** | <code>string</code> |
 
 
-#### DisengageOptions
+#### AbrevvaDisengageOptions
 
 | Prop                     | Type                 |
 | ------------------------ | -------------------- |

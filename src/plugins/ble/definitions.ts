@@ -76,6 +76,10 @@ export interface ReadResult {
   value?: string;
 }
 
+export interface ManufacturerDataResult {
+  value: ManufacturerData;
+}
+
 export interface WriteOptions {
   deviceId: string;
   service: string;
@@ -83,17 +87,50 @@ export interface WriteOptions {
   value: string;
 }
 
-export interface SignalizeOptions {
+export interface AbrevvaSignalizeOptions {
   deviceId: string;
 }
 
-export interface DisengageOptions {
+export interface AbrevvaDisengageOptions {
   deviceId: string;
   mobileId: string;
   mobileDeviceKey: string;
   mobileGroupId: string;
   mobileAccessData: string;
   isPermanentRelease: boolean;
+}
+
+export interface ManufacturerData {
+  companyIdentifier: string;
+  version: number;
+  componentType: number;
+  mainFirmwareVersionMajor: number;
+  mainFirmwareVersionMinor: number;
+  mainFirmwareVersionPatch: number;
+  componentHAL: number;
+  batteryStatus: number;
+  mainConstructionMode: number;
+  subConstructionMode: number;
+  isOnline: number;
+  officeModeEnabled: number;
+  twoFactorRequired: number;
+  officeModeActive: number;
+  identifier: string;
+  reservedBits?: number;
+  subFirmwareVersionMajor?: number;
+  subFirmwareVersionMinor?: number;
+  subFirmwareVersionPatch?: number;
+  subComponentIdentifier?: string;
+}
+
+export interface AbrevvaManufacturerData {
+  deviceId: string;
+  version: string;
+  componentType: "handle" | "escutcheon" | "cylinder" | "wallreader" | "emzy" | "iobox" | "unknown";
+  batteryStatus: "battery-full" | "battery-empty";
+  officeModeEnabled: boolean;
+  officeModeActive: boolean;
+  twoFactorRequired: boolean;
 }
 
 export interface AbrevvaBLEInterface {
@@ -112,10 +149,11 @@ export interface AbrevvaBLEInterface {
   addListener(eventName: "onScanResult", listenerFunc: (result: ScanResultInternal) => void): PluginListenerHandle;
   connect(options: DeviceIdOptions & TimeoutOptions): Promise<void>;
   disconnect(options: DeviceIdOptions): Promise<void>;
+  getManufacturerData(options: DeviceIdOptions): Promise<ManufacturerDataResult>;
   read(options: ReadOptions & TimeoutOptions): Promise<ReadResult>;
   write(options: WriteOptions & TimeoutOptions): Promise<void>;
-  signalize(options: SignalizeOptions): Promise<void>;
-  disengage(options: DisengageOptions): Promise<StringResult>;
+  signalize(options: AbrevvaSignalizeOptions): Promise<void>;
+  disengage(options: AbrevvaDisengageOptions): Promise<StringResult>;
   startNotifications(options: ReadOptions): Promise<void>;
   stopNotifications(options: ReadOptions): Promise<void>;
 }
