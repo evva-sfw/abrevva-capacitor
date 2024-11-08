@@ -1,6 +1,6 @@
 {
   "name": "@evva/abrevva-capacitor",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "type": "module",
   "description": "Collection of tools to work with electronic EVVA access components.",
   "main": "dist/plugin.cjs.js",
