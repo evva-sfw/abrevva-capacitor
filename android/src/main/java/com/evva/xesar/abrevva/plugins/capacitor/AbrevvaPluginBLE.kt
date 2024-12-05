@@ -535,7 +535,7 @@ class AbrevvaPluginBLE : Plugin() {
                 )
                 manufacturerData.put("subComponentIdentifier", data.subComponentIdentifier)
             }
-            bleDeviceData.put("manufacturerData", manufacturerData)
+            advertisementData.put("manufacturerData", manufacturerData)
         }
         bleDeviceData.put("advertisementData", advertisementData)
 
