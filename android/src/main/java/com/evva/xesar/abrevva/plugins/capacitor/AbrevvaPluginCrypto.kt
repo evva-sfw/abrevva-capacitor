@@ -29,7 +29,6 @@ private enum class CryptoError {
     DecryptInvalidArgumentError,
     DecryptEmptyResultError,
     DecryptCryptoError,
-    DecryptFileReadError,
     DecryptFileCryptoError,
     DecryptFileInvalidArgumentError,
     DecryptFileFromURLNetworkError,
