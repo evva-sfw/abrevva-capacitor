@@ -81,34 +81,27 @@ public class AbrevvaPluginBLE: CAPPlugin {
     @objc
     func requestLEScan(_ call: CAPPluginCall) {
         guard let bleManager = self.getBleManager(call) else { return }
-        let name = call.getString("name")
-        let namePrefix = call.getString("namePrefix")
-        let allowDuplicates = call.getBool("allowDuplicates", false)
+        let macFilter = call.getString("macFilter")
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
-        bleManager.startScan(
-            name,
-            namePrefix,
-            allowDuplicates,
-            { success in
-                if success {
-                    call.resolve()
-                } else {
-                    call.reject("requestLEScan(): failed to start")
-                }
-            }, { device, advertisementData, rssi in
-                self.bleDeviceMap[device.getAddress()] = device
-                let data = self.getScanResultDict(device, advertisementData, rssi)
-                self.notifyListeners("onScanResult", data: data)
-            },
-            { address in
-                self.notifyListeners("connected|\(address)", data: nil)
-            },
-            { address in
-                self.notifyListeners("disconnected|\(address)", data: nil)
-            },
-            timeout
-        )
+      bleManager.startScan(
+        macFilter,
+        timeout,
+        false,
+        { error in
+          if error == nil {
+            call.resolve()
+          } else {
+            call.reject("requestLEScan(): failed to start")
+          }
+        },
+        { error in },
+        { device, advertisementData, rssi in
+          self.bleDeviceMap[device.getAddress()] = device
+          let data = self.getAdvertismentData(device, rssi)
+          debugPrint(data)
+          self.notifyListeners("onScanResult", data: data)
+        })
     }
 
     @objc
@@ -216,7 +209,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
         let mobileID = call.getString("mobileId") ?? ""
         let mobileDeviceKey = call.getString("mobileDeviceKey") ?? ""
         let mobileGroupID = call.getString("mobileGroupId") ?? ""
-        let mobileAccessData = call.getString("mobileAccessData") ?? ""
+        let mediumAccessData = call.getString("mediumAccessData") ?? ""
         let isPermanentRelease = call.getBool("isPermanentRelease") ?? false
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
@@ -226,7 +219,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
                 mobileID,
                 mobileDeviceKey,
                 mobileGroupID,
-                mobileAccessData,
+                mediumAccessData,
                 isPermanentRelease,
                 timeout
             )
@@ -328,67 +321,72 @@ public class AbrevvaPluginBLE: CAPPlugin {
         return (serviceUUID, characteristicUUID)
     }
 
-    private func getBleDeviceDict(_ device: BleDevice) -> [String: String] {
-        var bleDevice = [
-            "deviceId": device.getAddress()
-        ]
-        if device.getName() != nil {
-            bleDevice["name"] = device.getName()
-        }
-        return bleDevice
-    }
-
-    private func getScanResultDict(
+    private func getAdvertismentData(
         _ device: BleDevice,
-        _ advertisementData: [String: Any],
         _ rssi: NSNumber
     ) -> [String: Any] {
-        var data = [
-            "device": self.getBleDeviceDict(device),
-            "rssi": rssi,
-            "txPower": advertisementData[CBAdvertisementDataTxPowerLevelKey] ?? 127,
-            "uuids": (advertisementData[CBAdvertisementDataServiceUUIDsKey] as? [CBUUID] ?? []).map { uuid -> String in
-                return CBUUIDToString(uuid)
-            }
-        ]
-
-        let localName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        if localName != nil {
-            data["localName"] = localName
-        }
-
-        let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data
-        if manufacturerData != nil {
-            data["manufacturerData"] = self.getManufacturerDataDict(data: manufacturerData!)
-        }
-
-        let serviceData = advertisementData[CBAdvertisementDataServiceDataKey] as? [CBUUID: Data]
-        if serviceData != nil {
-            data["serviceData"] = self.getServiceDataDict(data: serviceData!)
-        }
-        return data
+      
+      var bleDeviceData: [String: Any] = [
+        "deviceId": device.getAddress(),
+        "name": device.getName()
+      ]
+      
+      var advertismentData: [String: Any] = [
+        "rssi": rssi
+      ]
+      if let isConnectable = device.advertisementData?.isConnectable {
+        advertismentData["isConnectable"] = isConnectable
+      }
+      
+      guard let mfData = device.advertisementData?.manufacturerData else {
+        bleDeviceData ["advertisementData"] = advertismentData
+        return bleDeviceData
+      }
+      
+      var manufacturerData: [String: Any] = [
+        "companyIdentifier": mfData.companyIdentifier,
+        "version": mfData.version,
+        "mainFirmwareVersionMajor": mfData.mainFirmwareVersionMajor,
+        "mainFirmwareVersionMinor": mfData.mainFirmwareVersionMinor,
+        "mainFirmwareVersionPatch": mfData.mainFirmwareVersionPatch,
+        "componentHAL": mfData.componentHAL,
+        "batteryStatus": mfData.batteryStatus ? "battery-full" : "battery-empty",
+        "mainConstructionMode": mfData.mainConstructionMode,
+        "subConstructionMode": mfData.subConstructionMode,
+        "isOnline": mfData.isOnline,
+        "officeModeEnabled": mfData.officeModeEnabled,
+        "twoFactorRequired": mfData.twoFactorRequired,
+        "officeModeActive": mfData.officeModeActive,
+        "identifier": mfData.identifier,
+        "subFirmwareVersionMajor": mfData.subFirmwareVersionMajor,
+        "subFirmwareVersionMinor": mfData.subFirmwareVersionMinor,
+        "subFirmwareVersionPatch": mfData.subFirmwareVersionPatch,
+        "subComponentIdentifier": mfData.subComponentIdentifier,
+        "componentType": getComponentType(mfData.componentType)
+      ]
+      advertismentData["manufacturerData"] = manufacturerData
+      bleDeviceData["advertisementData"] = advertismentData
+      
+      return bleDeviceData
     }
 
-    private func getManufacturerDataDict(data: Data) -> [String: String] {
-        var company = 0
-        var rest = ""
-        for (index, byte) in data.enumerated() {
-            if index == 0 {
-                company += Int(byte)
-            } else if index == 1 {
-                company += Int(byte) * 256
-            } else {
-                rest += String(format: "%02hhx ", byte)
-            }
-        }
-        return [String(company): rest]
+  
+  private func getComponentType(_ componentType: UInt8) -> String {
+    switch componentType {
+    case 98:
+      "escutcheon"
+    case 100:
+      "handle"
+    case 105:
+      "iobox"
+    case 109:
+      "emzy"
+    case 119:
+      "wallreader"
+    case 122:
+      "cylinder"
+    default:
+      "unkown"
     }
-
-    private func getServiceDataDict(data: [CBUUID: Data]) -> [String: String] {
-        var result: [String: String] = [:]
-        for (key, value) in data {
-            result[CBUUIDToString(key)] = dataToString(value)
-        }
-        return result
-    }
+  }
 }
