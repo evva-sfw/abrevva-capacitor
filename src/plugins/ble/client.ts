@@ -33,7 +33,7 @@ export interface AbrevvaBLEClientInterface {
     mobileId: string,
     mobileDeviceKey: string,
     mobileGroupId: string,
-    mobileAccessData: string,
+    mediumAccessData: string,
     isPermanentRelease: boolean,
   ): Promise<string>;
   startNotifications(

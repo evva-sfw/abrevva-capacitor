@@ -269,7 +269,7 @@ describe("AbrevvaBLEClient", () => {
       mobileId: "",
       mobileDeviceKey: "",
       mobileGroupId: "",
-      mobileAccessData: "",
+      mediumAccessData: "",
       isPermanentRelease: false,
     });
     expect(result).toEqual("ACCESS_STATUS_AUTHORIZED");
