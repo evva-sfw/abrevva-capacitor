@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ChangeDetectorRef } from "@angular/core";
-import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
+import { AbrevvaBLEClient, BleDevice } from "@evva/abrevva-capacitor";
 
 @Component({
   selector: "app-ble",
@@ -10,7 +10,7 @@ import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
 export class BleComponent implements OnInit {
   constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
 
-  results: ScanResult[] = [];
+  results: BleDevice[] = [];
 
   async ngOnInit() {
     await AbrevvaBLEClient.initialize({ androidNeverForLocation: true });
@@ -20,9 +20,8 @@ export class BleComponent implements OnInit {
     const timeout = 5_000;
 
     this.results = [];
-    await AbrevvaBLEClient.requestLEScan({ timeout: timeout }, (result: ScanResult) => {
+    await AbrevvaBLEClient.requestLEScan({ timeout: timeout }, (result: BleDevice) => {
       this.results.push(result);
-      result.device.deviceId;
       this.changeDetectorRef.detectChanges();
     });
     setTimeout(() => {
@@ -30,21 +29,21 @@ export class BleComponent implements OnInit {
     }, timeout);
   }
 
-  async disengage(device: ScanResult) {
+  async disengage(device: BleDevice) {
     await AbrevvaBLEClient.connect(
-      device.device.deviceId,
-      (device) => {
+      device.deviceId,
+      (device: BleDevice) => {
         console.log(`disconnected: ${device}`);
       },
       { timeout: 1_000 },
     );
 
     await AbrevvaBLEClient.disengage(
-      "deviveId",
+      "deviceId",
       "mobileId",
       "mobileDeviceKey",
       "mobileGroupId",
-      "mobileAccessData",
+      "mediumAccessData",
       true,
     );
   }
