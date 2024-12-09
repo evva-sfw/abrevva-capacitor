@@ -84,25 +84,25 @@ public class AbrevvaPluginBLE: CAPPlugin {
         let macFilter = call.getString("macFilter")
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
-      bleManager.startScan(
-        { device, advertisementData, rssi in
-          self.bleDeviceMap[device.getAddress()] = device
-          let data = self.getAdvertismentData(device, rssi)
-          debugPrint(data)
-          self.notifyListeners("onScanResult", data: data)
-        },
-        { error in
-          if error == nil {
-            call.resolve()
-          } else {
-            call.reject("requestLEScan(): failed to start")
-          }
-        },
-        { error in },
-        macFilter,
-        false,
-        timeout
-      )
+        bleManager.startScan(
+            { device, _, rssi in
+                self.bleDeviceMap[device.getAddress()] = device
+                let data = self.getAdvertismentData(device, rssi)
+                debugPrint(data)
+                self.notifyListeners("onScanResult", data: data)
+            },
+            { error in
+                if error == nil {
+                    call.resolve()
+                } else {
+                    call.reject("requestLEScan(): failed to start")
+                }
+            },
+            { _ in },
+            macFilter,
+            false,
+            timeout
+        )
     }
 
     @objc
@@ -118,11 +118,11 @@ public class AbrevvaPluginBLE: CAPPlugin {
         guard let device = self.getDevice(call, checkConnection: false) else { return }
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
         Task {
-          let success = await self.bleManager!.connect(device, { address in
-            self.notifyListeners("disconnected|\(address)", data: nil)
-          },
-           timeout)
-          
+            let success = await self.bleManager!.connect(device, { address in
+                self.notifyListeners("disconnected|\(address)", data: nil)
+            },
+            timeout)
+
             if success {
                 call.resolve()
             } else {
@@ -329,69 +329,68 @@ public class AbrevvaPluginBLE: CAPPlugin {
         _ device: BleDevice,
         _ rssi: NSNumber
     ) -> [String: Any] {
-      
-      var bleDeviceData: [String: Any] = [
-        "deviceId": device.getAddress(),
-        "name": device.getName()
-      ]
-      
-      var advertismentData: [String: Any] = [
-        "rssi": rssi
-      ]
-      if let isConnectable = device.advertisementData?.isConnectable {
-        advertismentData["isConnectable"] = isConnectable
-      }
-      
-      guard let mfData = device.advertisementData?.manufacturerData else {
-        bleDeviceData ["advertisementData"] = advertismentData
+
+        var bleDeviceData: [String: Any] = [
+            "deviceId": device.getAddress(),
+            "name": device.getName()
+        ]
+
+        var advertismentData: [String: Any] = [
+            "rssi": rssi
+        ]
+        if let isConnectable = device.advertisementData?.isConnectable {
+            advertismentData["isConnectable"] = isConnectable
+        }
+
+        guard let mfData = device.advertisementData?.manufacturerData else {
+            bleDeviceData ["advertisementData"] = advertismentData
+            return bleDeviceData
+        }
+
+        var manufacturerData: [String: Any] = [
+            "companyIdentifier": mfData.companyIdentifier,
+            "version": mfData.version,
+            "mainFirmwareVersionMajor": mfData.mainFirmwareVersionMajor,
+            "mainFirmwareVersionMinor": mfData.mainFirmwareVersionMinor,
+            "mainFirmwareVersionPatch": mfData.mainFirmwareVersionPatch,
+            "componentHAL": mfData.componentHAL,
+            "batteryStatus": mfData.batteryStatus ? "battery-full" : "battery-empty",
+            "mainConstructionMode": mfData.mainConstructionMode,
+            "subConstructionMode": mfData.subConstructionMode,
+            "isOnline": mfData.isOnline,
+            "officeModeEnabled": mfData.officeModeEnabled,
+            "twoFactorRequired": mfData.twoFactorRequired,
+            "officeModeActive": mfData.officeModeActive,
+            "identifier": mfData.identifier,
+            "subFirmwareVersionMajor": mfData.subFirmwareVersionMajor,
+            "subFirmwareVersionMinor": mfData.subFirmwareVersionMinor,
+            "subFirmwareVersionPatch": mfData.subFirmwareVersionPatch,
+            "subComponentIdentifier": mfData.subComponentIdentifier,
+            "componentType": getComponentType(mfData.componentType)
+        ]
+        manufacturerData = manufacturerData.filter({$0.value != nil})
+        advertismentData["manufacturerData"] = manufacturerData
+        bleDeviceData["advertisementData"] = advertismentData
+
         return bleDeviceData
-      }
-      
-      var manufacturerData: [String: Any] = [
-        "companyIdentifier": mfData.companyIdentifier,
-        "version": mfData.version,
-        "mainFirmwareVersionMajor": mfData.mainFirmwareVersionMajor,
-        "mainFirmwareVersionMinor": mfData.mainFirmwareVersionMinor,
-        "mainFirmwareVersionPatch": mfData.mainFirmwareVersionPatch,
-        "componentHAL": mfData.componentHAL,
-        "batteryStatus": mfData.batteryStatus ? "battery-full" : "battery-empty",
-        "mainConstructionMode": mfData.mainConstructionMode,
-        "subConstructionMode": mfData.subConstructionMode,
-        "isOnline": mfData.isOnline,
-        "officeModeEnabled": mfData.officeModeEnabled,
-        "twoFactorRequired": mfData.twoFactorRequired,
-        "officeModeActive": mfData.officeModeActive,
-        "identifier": mfData.identifier,
-        "subFirmwareVersionMajor": mfData.subFirmwareVersionMajor,
-        "subFirmwareVersionMinor": mfData.subFirmwareVersionMinor,
-        "subFirmwareVersionPatch": mfData.subFirmwareVersionPatch,
-        "subComponentIdentifier": mfData.subComponentIdentifier,
-        "componentType": getComponentType(mfData.componentType)
-      ]
-      manufacturerData = manufacturerData.filter({$0.value != nil})
-      advertismentData["manufacturerData"] = manufacturerData
-      bleDeviceData["advertisementData"] = advertismentData
-      
-      return bleDeviceData
     }
 
-  
-  private func getComponentType(_ componentType: UInt8) -> String {
-    switch componentType {
-    case 98:
-      "escutcheon"
-    case 100:
-      "handle"
-    case 105:
-      "iobox"
-    case 109:
-      "emzy"
-    case 119:
-      "wallreader"
-    case 122:
-      "cylinder"
-    default:
-      "unkown"
+    private func getComponentType(_ componentType: UInt8) -> String {
+        switch componentType {
+        case 98:
+            "escutcheon"
+        case 100:
+            "handle"
+        case 105:
+            "iobox"
+        case 109:
+            "emzy"
+        case 119:
+            "wallreader"
+        case 122:
+            "cylinder"
+        default:
+            "unkown"
+        }
     }
-  }
 }
