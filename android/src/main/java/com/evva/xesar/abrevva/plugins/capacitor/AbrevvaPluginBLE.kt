@@ -216,7 +216,7 @@ class AbrevvaPluginBLE : Plugin() {
             } else {
                 call.reject("requestLEScan(): failed to start")
             }
-        }, {}, macFilter, timeout)
+        }, {}, macFilter, false, timeout)
     }
 
     @PluginMethod
