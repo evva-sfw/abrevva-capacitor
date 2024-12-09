@@ -85,9 +85,12 @@ public class AbrevvaPluginBLE: CAPPlugin {
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
       bleManager.startScan(
-        macFilter,
-        timeout,
-        false,
+        { device, advertisementData, rssi in
+          self.bleDeviceMap[device.getAddress()] = device
+          let data = self.getAdvertismentData(device, rssi)
+          debugPrint(data)
+          self.notifyListeners("onScanResult", data: data)
+        },
         { error in
           if error == nil {
             call.resolve()
@@ -96,12 +99,10 @@ public class AbrevvaPluginBLE: CAPPlugin {
           }
         },
         { error in },
-        { device, advertisementData, rssi in
-          self.bleDeviceMap[device.getAddress()] = device
-          let data = self.getAdvertismentData(device, rssi)
-          debugPrint(data)
-          self.notifyListeners("onScanResult", data: data)
-        })
+        macFilter,
+        false,
+        timeout
+      )
     }
 
     @objc
@@ -116,9 +117,12 @@ public class AbrevvaPluginBLE: CAPPlugin {
         guard self.getBleManager(call) != nil else { return }
         guard let device = self.getDevice(call, checkConnection: false) else { return }
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
-
         Task {
-            let success = await self.bleManager!.connect(device, timeout)
+          let success = await self.bleManager!.connect(device, { address in
+            self.notifyListeners("disconnected|\(address)", data: nil)
+          },
+           timeout)
+          
             if success {
                 call.resolve()
             } else {
