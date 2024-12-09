@@ -364,6 +364,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
         "subComponentIdentifier": mfData.subComponentIdentifier,
         "componentType": getComponentType(mfData.componentType)
       ]
+      manufacturerData = manufacturerData.filter({$0.value != nil})
       advertismentData["manufacturerData"] = manufacturerData
       bleDeviceData["advertisementData"] = advertismentData
       
