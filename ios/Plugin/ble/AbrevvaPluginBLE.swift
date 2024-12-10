@@ -91,10 +91,12 @@ public class AbrevvaPluginBLE: CAPPlugin {
                 self.notifyListeners("onScanResult", data: data)
             },
             { error in
-                call.resolve(["value": error == nil])
+                self.notifyListeners("onScanStart", data: ["value": error == nil])
+                call.resolve()
             },
             { error in
-                call.resolve(["value": error == nil])
+                self.notifyListeners("onScanStop", data: ["value": error == nil])
+                call.resolve()
             },
             macFilter,
             false,
