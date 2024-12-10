@@ -100,11 +100,13 @@ export interface AbrevvaBLEInterface {
   openLocationSettings(): Promise<void>;
   openBluetoothSettings(): Promise<void>;
   openAppSettings(): Promise<void>;
-  requestLEScan(options?: BleScannerOptions): Promise<void>;
-  stopLEScan(): Promise<void>;
+  startScan(options?: BleScannerOptions): Promise<void>;
+  stopScan(): Promise<void>;
   addListener(eventName: "onEnabledChanged", listenerFunc: (result: BooleanResult) => void): PluginListenerHandle;
   addListener(eventName: string, listenerFunc: (event: ReadResult) => void): PluginListenerHandle;
   addListener(eventName: "onScanResult", listenerFunc: (result: BleDevice) => void): PluginListenerHandle;
+  addListener(eventName: "onScanStart", listenerFunc: (success: BooleanResult) => void): PluginListenerHandle;
+  addListener(eventName: "onScanStop", listenerFunc: (success: BooleanResult) => void): PluginListenerHandle;
   connect(options: DeviceIdOptions & TimeoutOptions): Promise<void>;
   disconnect(options: DeviceIdOptions): Promise<void>;
   read(options: ReadOptions & TimeoutOptions): Promise<ReadResult>;

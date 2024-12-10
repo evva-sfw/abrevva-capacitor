@@ -15,8 +15,13 @@ export interface AbrevvaBLEClientInterface {
   openLocationSettings(): Promise<void>;
   openBluetoothSettings(): Promise<void>;
   openAppSettings(): Promise<void>;
-  requestLEScan(options: BleScannerOptions, callback: (result: BleDevice) => void): Promise<void>;
-  stopLEScan(): Promise<void>;
+  startScan(
+    options: BleScannerOptions,
+    onScanResult: (result: BleDevice) => void,
+    onScanStart?: (success: boolean) => void,
+    onScanStop?: (success: boolean) => void,
+  ): Promise<void>;
+  stopScan(): Promise<void>;
   connect(deviceId: string, onDisconnect?: (deviceId: string) => void, options?: TimeoutOptions): Promise<void>;
   disconnect(deviceId: string): Promise<void>;
   read(deviceId: string, service: string, characteristic: string, options?: TimeoutOptions): Promise<DataView>;
@@ -46,7 +51,10 @@ export interface AbrevvaBLEClientInterface {
 }
 
 class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
-  private scanListener: PluginListenerHandle | null = null;
+  private scanResultListener: PluginListenerHandle | null = null;
+  private scanStartListener: PluginListenerHandle | null = null;
+  private scanStopListener: PluginListenerHandle | null = null;
+
   private eventListeners = new Map<string, PluginListenerHandle>();
   private queue = getQueue(true);
 
@@ -109,21 +117,40 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
     });
   }
 
-  async requestLEScan(options: BleScannerOptions, callback: (result: BleDevice) => void): Promise<void> {
+  async startScan(
+    options: BleScannerOptions,
+    onScanResult: (result: BleDevice) => void,
+    onScanStart?: (success: boolean) => void,
+    onScanStop?: (success: boolean) => void,
+  ): Promise<void> {
     await this.queue(async () => {
-      await this.scanListener?.remove();
-      this.scanListener = AbrevvaBLE.addListener("onScanResult", (device: BleDevice) => {
-        callback(device);
+      await this.scanResultListener?.remove();
+      this.scanResultListener = AbrevvaBLE.addListener("onScanResult", (device: BleDevice) => {
+        onScanResult(device);
       });
-      await AbrevvaBLE.requestLEScan(options);
+      if (onScanStart) {
+        await this.scanStartListener?.remove();
+        this.scanStartListener = AbrevvaBLE.addListener("onScanStart", (result) => {
+          onScanStart(result.value);
+          this.scanStartListener?.remove();
+        });
+      }
+      if (onScanStop) {
+        await this.scanStopListener?.remove();
+        this.scanStopListener = AbrevvaBLE.addListener("onScanStop", (result) => {
+          onScanStop(result.value);
+          this.scanStopListener?.remove();
+        });
+      }
+      await AbrevvaBLE.startScan(options);
     });
   }
 
-  async stopLEScan(): Promise<void> {
+  async stopScan(): Promise<void> {
     await this.queue(async () => {
-      await this.scanListener?.remove();
-      this.scanListener = null;
-      await AbrevvaBLE.stopLEScan();
+      await this.scanResultListener?.remove();
+      this.scanResultListener = null;
+      await AbrevvaBLE.stopScan();
     });
   }
 

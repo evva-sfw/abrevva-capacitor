@@ -197,30 +197,33 @@ class AbrevvaPluginBLE : Plugin() {
     }
 
     @PluginMethod
-    fun requestLEScan(call: PluginCall) {
+    fun startScan(call: PluginCall) {
         val macFilter = call.getString("macFilter", null)
         val timeout = call.getFloat("timeout", 15000.0F)!!.toLong()
 
         this.manager.startScan({ device ->
-            Logger.debug(tag, "Found device: ${device.address}")
-
+            Logger.debug(tag, "onScanResult(): device found: ${device.address}")
             val bleDevice = getBleDeviceData(device)
             try {
                 notifyListeners("onScanResult", bleDevice)
             } catch (e: Exception) {
-                Logger.error(tag, "requestLEScan()", e)
+                Logger.error(tag, "onScanResult()", e)
             }
         }, { success ->
-            if (success) {
-                call.resolve()
-            } else {
-                call.reject("requestLEScan(): failed to start")
-            }
-        }, {}, macFilter, false, timeout)
+            val data = JSObject()
+            data.put("value", success)
+            notifyListeners("onScanStart", data)
+            call.resolve()
+        }, { success ->
+            val data = JSObject()
+            data.put("value", success)
+            notifyListeners("onScanStop", data)
+            call.resolve()
+        }, macFilter, false, timeout)
     }
 
     @PluginMethod
-    fun stopLEScan(call: PluginCall) {
+    fun stopScan(call: PluginCall) {
         manager.stopScan()
         call.resolve()
     }
