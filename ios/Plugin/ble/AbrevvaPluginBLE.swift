@@ -326,14 +326,14 @@ public class AbrevvaPluginBLE: CAPPlugin {
 
     private func getAdvertismentData(
         _ device: BleDevice
-    ) -> [String: Any] {
+    ) -> [String: Any?] {
 
-        var bleDeviceData: [String: Any] = [
+        var bleDeviceData: [String: Any?] = [
             "deviceId": device.getAddress(),
             "name": device.getName()
         ]
 
-        var advertismentData: [String: Any] = [
+        var advertismentData: [String: Any?] = [
             "rssi": device.advertisementData?.rssi
         ]
         if let isConnectable = device.advertisementData?.isConnectable {
@@ -345,7 +345,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
             return bleDeviceData
         }
 
-        var manufacturerData: [String: Any] = [
+        var manufacturerData: [String: Any?] = [
             "companyIdentifier": mfData.companyIdentifier,
             "version": mfData.version,
             "mainFirmwareVersionMajor": mfData.mainFirmwareVersionMajor,
@@ -366,7 +366,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
             "subComponentIdentifier": mfData.subComponentIdentifier,
             "componentType": getComponentType(mfData.componentType)
         ]
-        manufacturerData = manufacturerData.filter({$0.value != nil})
+
         advertismentData["manufacturerData"] = manufacturerData
         bleDeviceData["advertisementData"] = advertismentData
 
