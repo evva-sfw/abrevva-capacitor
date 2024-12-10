@@ -79,7 +79,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
     }
 
     @objc
-    func requestLEScan(_ call: CAPPluginCall) {
+    func startScan(_ call: CAPPluginCall) {
         guard let bleManager = self.getBleManager(call) else { return }
         let macFilter = call.getString("macFilter")
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
@@ -88,17 +88,14 @@ public class AbrevvaPluginBLE: CAPPlugin {
             { device, _, rssi in
                 self.bleDeviceMap[device.getAddress()] = device
                 let data = self.getAdvertismentData(device, rssi)
-                debugPrint(data)
                 self.notifyListeners("onScanResult", data: data)
             },
             { error in
-                if error == nil {
-                    call.resolve()
-                } else {
-                    call.reject("requestLEScan(): failed to start")
-                }
+                call.resolve(["value": error == nil])
             },
-            { _ in },
+            { error in
+                call.resolve(["value": error == nil])
+            },
             macFilter,
             false,
             timeout
@@ -106,7 +103,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
     }
 
     @objc
-    func stopLEScan(_ call: CAPPluginCall) {
+    func stopScan(_ call: CAPPluginCall) {
         guard let bleManager = self.getBleManager(call) else { return }
         bleManager.stopScan()
         call.resolve()

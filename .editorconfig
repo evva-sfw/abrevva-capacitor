@@ -11,7 +11,10 @@ trim_trailing_whitespace = true
 [*.java]
 ij_java_imports_layout = $*, |, javax.**, java.**, |, *
 
-[{*.gradle,*.kt}]
+[*.swift]
+indent_size = 4
+
+[{*.gradle,*.kt,*.kts}]
 indent_size = 4
 
 [*.md]

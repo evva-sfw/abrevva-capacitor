@@ -10,8 +10,8 @@ CAP_PLUGIN(AbrevvaPluginBLE, "AbrevvaPluginBLE",
     CAP_PLUGIN_METHOD(openLocationSettings, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(openBluetoothSettings, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(openAppSettings, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(requestLEScan, CAPPluginReturnPromise);
-    CAP_PLUGIN_METHOD(stopLEScan, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(startScan, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(stopScan, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(connect, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(disconnect, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(read, CAPPluginReturnPromise);
