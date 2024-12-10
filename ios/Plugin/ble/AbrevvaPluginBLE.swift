@@ -87,7 +87,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
         bleManager.startScan(
             { device in
                 self.bleDeviceMap[device.getAddress()] = device
-              let data = self.getAdvertismentData(device)
+                let data = self.getAdvertismentData(device)
                 self.notifyListeners("onScanResult", data: data)
             },
             { error in
@@ -334,7 +334,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
         ]
 
         var advertismentData: [String: Any] = [
-          "rssi": device.advertisementData?.rssi
+            "rssi": device.advertisementData?.rssi
         ]
         if let isConnectable = device.advertisementData?.isConnectable {
             advertismentData["isConnectable"] = isConnectable
