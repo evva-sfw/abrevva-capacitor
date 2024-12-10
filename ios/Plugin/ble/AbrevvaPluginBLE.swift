@@ -85,9 +85,9 @@ public class AbrevvaPluginBLE: CAPPlugin {
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
         bleManager.startScan(
-            { device, _, rssi in
+            { device in
                 self.bleDeviceMap[device.getAddress()] = device
-                let data = self.getAdvertismentData(device, rssi)
+              let data = self.getAdvertismentData(device)
                 self.notifyListeners("onScanResult", data: data)
             },
             { error in
@@ -323,8 +323,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
     }
 
     private func getAdvertismentData(
-        _ device: BleDevice,
-        _ rssi: NSNumber
+        _ device: BleDevice
     ) -> [String: Any] {
 
         var bleDeviceData: [String: Any] = [
@@ -333,7 +332,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
         ]
 
         var advertismentData: [String: Any] = [
-            "rssi": rssi
+          "rssi": device.advertisementData?.rssi
         ]
         if let isConnectable = device.advertisementData?.isConnectable {
             advertismentData["isConnectable"] = isConnectable
