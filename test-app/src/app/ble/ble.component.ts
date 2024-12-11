@@ -20,7 +20,7 @@ export class BleComponent implements OnInit {
     const timeout = 5_000;
 
     this.results = [];
-    await AbrevvaBLEClient.requestLEScan({ timeout: timeout }, (result: BleDevice) => {
+    await AbrevvaBLEClient.startScan({ timeout: timeout }, (result: BleDevice) => {
       this.results.push(result);
       this.changeDetectorRef.detectChanges();
     });
@@ -30,16 +30,9 @@ export class BleComponent implements OnInit {
   }
 
   async disengage(device: BleDevice) {
-    await AbrevvaBLEClient.connect(
-      device.deviceId,
-      (device: BleDevice) => {
-        console.log(`disconnected: ${device}`);
-      },
-      { timeout: 1_000 },
-    );
-
+    await AbrevvaBLEClient.stopScan();
     await AbrevvaBLEClient.disengage(
-      "deviceId",
+      device.deviceId,
       "mobileId",
       "mobileDeviceKey",
       "mobileGroupId",
