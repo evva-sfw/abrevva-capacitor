@@ -199,6 +199,7 @@ class AbrevvaPluginBLE : Plugin() {
     @PluginMethod
     fun startScan(call: PluginCall) {
         val macFilter = call.getString("macFilter", null)
+        val allowDuplicates = call.getBoolean("allowDuplicates", false)
         val timeout = call.getFloat("timeout", 15000.0F)!!.toLong()
 
         this.manager.startScan({ device ->
@@ -219,7 +220,7 @@ class AbrevvaPluginBLE : Plugin() {
             data.put("value", success)
             notifyListeners("onScanStop", data)
             call.resolve()
-        }, macFilter, false, timeout)
+        }, macFilter, allowDuplicates, timeout)
     }
 
     @PluginMethod

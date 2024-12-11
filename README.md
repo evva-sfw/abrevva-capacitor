@@ -54,38 +54,123 @@ npx cap sync
 import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
 
 class ExampleClass {
-  private results: ScanResult[];
+  private devices: BleDevice[];
   
   async startScan(event: any) {
-    this.results = [];
-    
-    await AbrevvaBLEClient.requestLEScan({ timeout: 5_000 }, (result: ScanResult) => {
-      this.results.push(result);
+    this.devices = [];
+   
+    await AbrevvaBLEClient.initialize()
+    await AbrevvaBLEClient.startScan({ timeout: 5_000 }, (device: BleDevice) => {
+      this.devices.push(device);
+    }, (success: boolean) => {
+      console.log(`Scan started, success: ${success}`);
+    }, (success: boolean) => {
+      console.log(`Scan stopped, success: ${success}`);
     });
   }
 }
 ```
 
+### Read EVVA component advertisement
+
+Get the EVVA advertisement data from a scanned EVVA component.
+
+```typescript
+const ad = device.advertisementData
+console.log(ad?.rssi)
+console.log(ad?.isConnectable)
+
+const md = ad?.manufacturerData
+console.log(md?.batteryStatus)
+console.log(md?.isOnline)
+console.log(md?.officeModeEnabled)
+console.log(md?.officeModeActive)
+// ...
+```
+
+There are several properties that can be accessed from the advertisement.
+
+```typescript
+export interface BleDeviceAdvertisementData {
+  rssi?: number;
+  isConnectable?: boolean;
+  manufacturerData?: BleDeviceManufacturerData;
+}
+
+export interface BleDeviceManufacturerData {
+  companyIdentifier?: string;
+  version?: number;
+  componentType?: "handle" | "escutcheon" | "cylinder" | "wallreader" | "emzy" | "iobox" | "unknown";
+  mainFirmwareVersionMajor?: number;
+  mainFirmwareVersionMinor?: number;
+  mainFirmwareVersionPatch?: number;
+  componentHAL?: string;
+  batteryStatus?: "battery-full" | "battery-empty";
+  mainConstructionMode?: boolean;
+  subConstructionMode?: boolean;
+  isOnline?: boolean;
+  officeModeEnabled?: boolean;
+  twoFactorRequired?: boolean;
+  officeModeActive?: boolean;
+  identifier?: string;
+  subFirmwareVersionMajor?: number;
+  subFirmwareVersionMinor?: number;
+  subFirmwareVersionPatch?: number;
+  subComponentIdentifier?: string;
+}
+```
+
 ### Localize EVVA component
 
-With the signalize method you can localize EVVA components. On a successful signalization the component will emit a melody indicating its location.
+With the signalize method you can localize scanned EVVA components. On a successful signalization the component will emit a melody indicating its location.
 
 ```typescript
 const success = await AbrevvaBLEClient.signalize('deviceId');
 ```
 
-### Perform disengage on EVVA components
+### Disengage EVVA components
 
 For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired in the form of access media metadata from the Xesar software.
 
 ```typescript
 const status = await AbrevvaBLEClient.disengage(
+  'deviceId',
   'mobileId',
   'mobileDeviceKey',
   'mobileGroupId',
-  'mobileAccessData',
+  'mediumAccessData',
   false,
 );
+```
+
+There are several access status types upon attempting the component disengage.
+
+```typescript
+export enum DisengageStatusType {
+  /// Component
+  Authorized = "AUTHORIZED",
+  AuthorizedPermanentEngage = "AUTHORIZED_PERMANENT_ENGAGE",
+  AuthorizedPermanentDisengage = "AUTHORIZED_PERMANENT_DISENGAGE",
+  AuthorizedBatteryLow = "AUTHORIZED_BATTERY_LOW",
+  AuthorizedOffline = "AUTHORIZED_OFFLINE",
+  Unauthorized = "UNAUTHORIZED",
+  UnauthorizedOffline = "UNAUTHORIZED_OFFLINE",
+  SignalLocalization = "SIGNAL_LOCALIZATION",
+  MediumDefectOnline = "MEDIUM_DEFECT_ONLINE",
+  MediumBlacklisted = "MEDIUM_BLACKLISTED",
+  Error = "ERROR",
+
+  /// Interface
+  UnableToConnect = "UNABLE_TO_CONNECT",
+  UnableToSetNotifications = "UNABLE_TO_SET_NOTIFICATIONS",
+  UnableToReadChallenge = "UNABLE_TO_READ_CHALLENGE",
+  UnableToWriteMDF = "UNABLE_TO_WRITE_MDF",
+  AccessCipherError = "ACCESS_CIPHER_ERROR",
+  BleAdapterDisabled = "BLE_ADAPTER_DISABLED",
+  UnknownDevice = "UNKNOWN_DEVICE",
+  UnknownStatusCode = "UNKNOWN_STATUS_CODE",
+  Timeout = "TIMEOUT",
+}
 ```
 
 ## API
@@ -147,10 +232,11 @@ const status = await AbrevvaBLEClient.disengage(
 
 #### BleScannerOptions
 
-| Prop            | Type                |
-| --------------- | ------------------- |
-| **`macFilter`** | <code>string</code> |
-| **`timeout`**   | <code>number</code> |
+| Prop                  | Type                 |
+| --------------------- | -------------------- |
+| **`macFilter`**       | <code>string</code>  |
+| **`allowDuplicates`** | <code>boolean</code> |
+| **`timeout`**         | <code>number</code>  |
 
 
 #### PluginListenerHandle

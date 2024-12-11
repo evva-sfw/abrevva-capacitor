@@ -5,7 +5,7 @@ import { Capacitor } from "@capacitor/core";
 import type { AbrevvaBLEClientInterface } from "./client";
 import { AbrevvaBLEClient } from "./client";
 import { hexStringToDataView, numbersToDataView } from "./conversion";
-import type { BleDevice } from "./definitions";
+import { BleDevice, DisengageStatusType } from "./definitions";
 import { AbrevvaBLE } from "./plugin";
 
 interface AbrevvaBLEClientWithPrivate extends AbrevvaBLEClientInterface {
@@ -274,7 +274,7 @@ describe("AbrevvaBLEClient", () => {
     expect(Capacitor.getPlatform()).toBe("android");
 
     (AbrevvaBLE.disengage as jest.Mock).mockReturnValue({
-      value: "ACCESS_STATUS_AUTHORIZED",
+      value: DisengageStatusType.Authorized,
     });
     const result = await AbrevvaBLEClient.disengage(mockDevice.deviceId, "", "", "", "", false);
     expect(AbrevvaBLE.disengage).toHaveBeenCalledWith({
@@ -285,7 +285,7 @@ describe("AbrevvaBLEClient", () => {
       mediumAccessData: "",
       isPermanentRelease: false,
     });
-    expect(result).toEqual("ACCESS_STATUS_AUTHORIZED");
+    expect(result).toEqual(DisengageStatusType.Authorized);
   });
 
   it("should run startNotifications", async () => {

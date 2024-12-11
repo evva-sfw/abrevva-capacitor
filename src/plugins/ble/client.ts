@@ -1,7 +1,15 @@
 import type { PluginListenerHandle } from "@capacitor/core";
 
 import { dataViewToHexString, hexStringToDataView } from "./conversion";
-import type { InitializeOptions, TimeoutOptions, ReadResult, BleScannerOptions, BleDevice, Data } from "./definitions";
+import {
+  BleDevice,
+  BleScannerOptions,
+  Data,
+  DisengageStatusType,
+  InitializeOptions,
+  ReadResult,
+  TimeoutOptions,
+} from "./definitions";
 import { AbrevvaBLE } from "./plugin";
 import { getQueue } from "./queue";
 import { validateUUID } from "./validators";
@@ -227,7 +235,7 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
     isPermanentRelease: boolean,
     onConnect?: (address: string) => void,
     onDisconnect?: (address: string) => void,
-  ): Promise<string> {
+  ): Promise<DisengageStatusType> {
     return await this.queue(async () => {
       if (onConnect) {
         await this.eventListeners.get(`connected|${deviceId}`)?.remove();
@@ -248,16 +256,24 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
         );
       }
 
-      const result = await AbrevvaBLE.disengage({
-        deviceId,
-        mobileId,
-        mobileDeviceKey,
-        mobileGroupId,
-        mediumAccessData,
-        isPermanentRelease,
-      });
+      const status = (
+        await AbrevvaBLE.disengage({
+          deviceId,
+          mobileId,
+          mobileDeviceKey,
+          mobileGroupId,
+          mediumAccessData,
+          isPermanentRelease,
+        })
+      ).value;
 
-      return result.value;
+      let result: DisengageStatusType;
+      if (Object.values(DisengageStatusType).some((val: string) => val === status)) {
+        result = <DisengageStatusType>status;
+      } else {
+        result = DisengageStatusType.Error;
+      }
+      return result;
     });
   }
 

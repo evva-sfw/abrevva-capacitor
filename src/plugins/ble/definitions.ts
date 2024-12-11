@@ -24,6 +24,7 @@ export interface TimeoutOptions {
 
 export interface BleScannerOptions {
   macFilter?: string;
+  allowDuplicates?: boolean;
   timeout?: number;
 }
 
@@ -89,6 +90,32 @@ export interface DisengageOptions {
   mobileGroupId: string;
   mediumAccessData: string;
   isPermanentRelease: boolean;
+}
+
+export enum DisengageStatusType {
+  /// Component
+  Authorized = "AUTHORIZED",
+  AuthorizedPermanentEngage = "AUTHORIZED_PERMANENT_ENGAGE",
+  AuthorizedPermanentDisengage = "AUTHORIZED_PERMANENT_DISENGAGE",
+  AuthorizedBatteryLow = "AUTHORIZED_BATTERY_LOW",
+  AuthorizedOffline = "AUTHORIZED_OFFLINE",
+  Unauthorized = "UNAUTHORIZED",
+  UnauthorizedOffline = "UNAUTHORIZED_OFFLINE",
+  SignalLocalization = "SIGNAL_LOCALIZATION",
+  MediumDefectOnline = "MEDIUM_DEFECT_ONLINE",
+  MediumBlacklisted = "MEDIUM_BLACKLISTED",
+  Error = "ERROR",
+
+  /// Interface
+  UnableToConnect = "UNABLE_TO_CONNECT",
+  UnableToSetNotifications = "UNABLE_TO_SET_NOTIFICATIONS",
+  UnableToReadChallenge = "UNABLE_TO_READ_CHALLENGE",
+  UnableToWriteMDF = "UNABLE_TO_WRITE_MDF",
+  AccessCipherError = "ACCESS_CIPHER_ERROR",
+  BleAdapterDisabled = "BLE_ADAPTER_DISABLED",
+  UnknownDevice = "UNKNOWN_DEVICE",
+  UnknownStatusCode = "UNKNOWN_STATUS_CODE",
+  Timeout = "TIMEOUT",
 }
 
 export interface AbrevvaBLEInterface {

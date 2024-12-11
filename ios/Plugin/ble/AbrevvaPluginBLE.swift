@@ -82,13 +82,14 @@ public class AbrevvaPluginBLE: CAPPlugin {
     func startScan(_ call: CAPPluginCall) {
         guard let bleManager = self.getBleManager(call) else { return }
         let macFilter = call.getString("macFilter")
+        let allowDuplicates = call.getBool("allowDuplicates") ?? false
         let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
         bleManager.startScan(
             { device in
                 self.bleDeviceMap[device.getAddress()] = device
                 let data = self.getAdvertismentData(device)
-                self.notifyListeners("onScanResult", data: data)
+                self.notifyListeners("onScanResult", data: data as [String: Any])
             },
             { error in
                 self.notifyListeners("onScanStart", data: ["value": error == nil])
@@ -99,7 +100,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
                 call.resolve()
             },
             macFilter,
-            false,
+            allowDuplicates,
             timeout
         )
     }
