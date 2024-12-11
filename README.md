@@ -54,38 +54,123 @@ npx cap sync
 import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
 
 class ExampleClass {
-  private results: ScanResult[];
+  private devices: BleDevice[];
   
   async startScan(event: any) {
-    this.results = [];
-    
-    await AbrevvaBLEClient.requestLEScan({ timeout: 5_000 }, (result: ScanResult) => {
-      this.results.push(result);
+    this.devices = [];
+   
+    await AbrevvaBLEClient.initialize()
+    await AbrevvaBLEClient.startScan({ timeout: 5_000 }, (device: BleDevice) => {
+      this.devices.push(device);
+    }, (success: boolean) => {
+      console.log(`Scan started, success: ${success}`);
+    }, (success: boolean) => {
+      console.log(`Scan stopped, success: ${success}`);
     });
   }
 }
 ```
 
+### Read EVVA component advertisement
+
+Get the EVVA advertisement data from a scanned EVVA component.
+
+```typescript
+const ad = device.advertisementData
+console.log(ad?.rssi)
+console.log(ad?.isConnectable)
+
+const md = ad?.manufacturerData
+console.log(md?.batteryStatus)
+console.log(md?.isOnline)
+console.log(md?.officeModeEnabled)
+console.log(md?.officeModeActive)
+// ...
+```
+
+There are several properties that can be accessed from the advertisement.
+
+```typescript
+export interface BleDeviceAdvertisementData {
+  rssi?: number;
+  isConnectable?: boolean;
+  manufacturerData?: BleDeviceManufacturerData;
+}
+
+export interface BleDeviceManufacturerData {
+  companyIdentifier?: string;
+  version?: number;
+  componentType?: "handle" | "escutcheon" | "cylinder" | "wallreader" | "emzy" | "iobox" | "unknown";
+  mainFirmwareVersionMajor?: number;
+  mainFirmwareVersionMinor?: number;
+  mainFirmwareVersionPatch?: number;
+  componentHAL?: string;
+  batteryStatus?: "battery-full" | "battery-empty";
+  mainConstructionMode?: boolean;
+  subConstructionMode?: boolean;
+  isOnline?: boolean;
+  officeModeEnabled?: boolean;
+  twoFactorRequired?: boolean;
+  officeModeActive?: boolean;
+  identifier?: string;
+  subFirmwareVersionMajor?: number;
+  subFirmwareVersionMinor?: number;
+  subFirmwareVersionPatch?: number;
+  subComponentIdentifier?: string;
+}
+```
+
 ### Localize EVVA component
 
-With the signalize method you can localize EVVA components. On a successful signalization the component will emit a melody indicating its location.
+With the signalize method you can localize scanned EVVA components. On a successful signalization the component will emit a melody indicating its location.
 
 ```typescript
 const success = await AbrevvaBLEClient.signalize('deviceId');
 ```
 
-### Perform disengage on EVVA components
+### Disengage EVVA components
 
 For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired in the form of access media metadata from the Xesar software.
 
 ```typescript
 const status = await AbrevvaBLEClient.disengage(
+  'deviceId',
   'mobileId',
   'mobileDeviceKey',
   'mobileGroupId',
-  'mobileAccessData',
+  'mediumAccessData',
   false,
 );
+```
+
+There are several access status types upon attempting the component disengage.
+
+```typescript
+export enum DisengageStatusType {
+  /// Component
+  Authorized = "AUTHORIZED",
+  AuthorizedPermanentEngage = "AUTHORIZED_PERMANENT_ENGAGE",
+  AuthorizedPermanentDisengage = "AUTHORIZED_PERMANENT_DISENGAGE",
+  AuthorizedBatteryLow = "AUTHORIZED_BATTERY_LOW",
+  AuthorizedOffline = "AUTHORIZED_OFFLINE",
+  Unauthorized = "UNAUTHORIZED",
+  UnauthorizedOffline = "UNAUTHORIZED_OFFLINE",
+  SignalLocalization = "SIGNAL_LOCALIZATION",
+  MediumDefectOnline = "MEDIUM_DEFECT_ONLINE",
+  MediumBlacklisted = "MEDIUM_BLACKLISTED",
+  Error = "ERROR",
+
+  /// Interface
+  UnableToConnect = "UNABLE_TO_CONNECT",
+  UnableToSetNotifications = "UNABLE_TO_SET_NOTIFICATIONS",
+  UnableToReadChallenge = "UNABLE_TO_READ_CHALLENGE",
+  UnableToWriteMDF = "UNABLE_TO_WRITE_MDF",
+  AccessCipherError = "ACCESS_CIPHER_ERROR",
+  BleAdapterDisabled = "BLE_ADAPTER_DISABLED",
+  UnknownDevice = "UNKNOWN_DEVICE",
+  UnknownStatusCode = "UNKNOWN_STATUS_CODE",
+  Timeout = "TIMEOUT",
+}
 ```
 
 ## API
@@ -93,7 +178,6 @@ const status = await AbrevvaBLEClient.disengage(
 <docgen-index>
 
 * [Interfaces](#interfaces)
-* [Enums](#enums)
 
 </docgen-index>
 
@@ -105,29 +189,31 @@ const status = await AbrevvaBLEClient.disengage(
 
 #### AbrevvaBLEInterface
 
-| Method                        | Signature                                                                                                                                                                           |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **initialize**                | (options?: <a href="#initializeoptions">InitializeOptions</a> \| undefined) =&gt; Promise&lt;void&gt;                                                                               |
-| **isEnabled**                 | () =&gt; Promise&lt;<a href="#booleanresult">BooleanResult</a>&gt;                                                                                                                  |
-| **isLocationEnabled**         | () =&gt; Promise&lt;<a href="#booleanresult">BooleanResult</a>&gt;                                                                                                                  |
-| **startEnabledNotifications** | () =&gt; Promise&lt;void&gt;                                                                                                                                                        |
-| **stopEnabledNotifications**  | () =&gt; Promise&lt;void&gt;                                                                                                                                                        |
-| **openLocationSettings**      | () =&gt; Promise&lt;void&gt;                                                                                                                                                        |
-| **openBluetoothSettings**     | () =&gt; Promise&lt;void&gt;                                                                                                                                                        |
-| **openAppSettings**           | () =&gt; Promise&lt;void&gt;                                                                                                                                                        |
-| **requestLEScan**             | (options?: <a href="#requestbledeviceoptions">RequestBleDeviceOptions</a> \| undefined) =&gt; Promise&lt;void&gt;                                                                   |
-| **stopLEScan**                | () =&gt; Promise&lt;void&gt;                                                                                                                                                        |
-| **addListener**               | (eventName: "onEnabledChanged", listenerFunc: (result: <a href="#booleanresult">BooleanResult</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a>       |
-| **addListener**               | (eventName: string, listenerFunc: (event: <a href="#readresult">ReadResult</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a>                          |
-| **addListener**               | (eventName: "onScanResult", listenerFunc: (result: <a href="#scanresultinternal">ScanResultInternal</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a> |
-| **connect**                   | (options: <a href="#deviceidoptions">DeviceIdOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                                  |
-| **disconnect**                | (options: <a href="#deviceidoptions">DeviceIdOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                 |
-| **read**                      | (options: <a href="#readoptions">ReadOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;<a href="#readresult">ReadResult</a>&gt;                          |
-| **write**                     | (options: <a href="#writeoptions">WriteOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                                        |
-| **signalize**                 | (options: <a href="#signalizeoptions">SignalizeOptions</a>) =&gt; Promise&lt;void&gt;                                                                                               |
-| **disengage**                 | (options: <a href="#disengageoptions">DisengageOptions</a>) =&gt; Promise&lt;<a href="#stringresult">StringResult</a>&gt;                                                           |
-| **startNotifications**        | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                         |
-| **stopNotifications**         | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                         |
+| Method                        | Signature                                                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **initialize**                | (options?: <a href="#initializeoptions">InitializeOptions</a> \| undefined) =&gt; Promise&lt;void&gt;                                                                         |
+| **isEnabled**                 | () =&gt; Promise&lt;<a href="#booleanresult">BooleanResult</a>&gt;                                                                                                            |
+| **isLocationEnabled**         | () =&gt; Promise&lt;<a href="#booleanresult">BooleanResult</a>&gt;                                                                                                            |
+| **startEnabledNotifications** | () =&gt; Promise&lt;void&gt;                                                                                                                                                  |
+| **stopEnabledNotifications**  | () =&gt; Promise&lt;void&gt;                                                                                                                                                  |
+| **openLocationSettings**      | () =&gt; Promise&lt;void&gt;                                                                                                                                                  |
+| **openBluetoothSettings**     | () =&gt; Promise&lt;void&gt;                                                                                                                                                  |
+| **openAppSettings**           | () =&gt; Promise&lt;void&gt;                                                                                                                                                  |
+| **startScan**                 | (options?: <a href="#blescanneroptions">BleScannerOptions</a> \| undefined) =&gt; Promise&lt;void&gt;                                                                         |
+| **stopScan**                  | () =&gt; Promise&lt;void&gt;                                                                                                                                                  |
+| **addListener**               | (eventName: "onEnabledChanged", listenerFunc: (result: <a href="#booleanresult">BooleanResult</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a> |
+| **addListener**               | (eventName: string, listenerFunc: (event: <a href="#readresult">ReadResult</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a>                    |
+| **addListener**               | (eventName: "onScanResult", listenerFunc: (result: <a href="#bledevice">BleDevice</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a>             |
+| **addListener**               | (eventName: "onScanStart", listenerFunc: (success: <a href="#booleanresult">BooleanResult</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a>     |
+| **addListener**               | (eventName: "onScanStop", listenerFunc: (success: <a href="#booleanresult">BooleanResult</a>) =&gt; void) =&gt; <a href="#pluginlistenerhandle">PluginListenerHandle</a>      |
+| **connect**                   | (options: <a href="#deviceidoptions">DeviceIdOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                            |
+| **disconnect**                | (options: <a href="#deviceidoptions">DeviceIdOptions</a>) =&gt; Promise&lt;void&gt;                                                                                           |
+| **read**                      | (options: <a href="#readoptions">ReadOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;<a href="#readresult">ReadResult</a>&gt;                    |
+| **write**                     | (options: <a href="#writeoptions">WriteOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                                  |
+| **signalize**                 | (options: <a href="#signalizeoptions">SignalizeOptions</a>) =&gt; Promise&lt;void&gt;                                                                                         |
+| **disengage**                 | (options: <a href="#disengageoptions">DisengageOptions</a>) =&gt; Promise&lt;<a href="#stringresult">StringResult</a>&gt;                                                     |
+| **startNotifications**        | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                   |
+| **stopNotifications**         | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                   |
 
 
 #### InitializeOptions
@@ -144,17 +230,13 @@ const status = await AbrevvaBLEClient.disengage(
 | **`value`** | <code>boolean</code> |
 
 
-#### RequestBleDeviceOptions
+#### BleScannerOptions
 
-| Prop                   | Type                                          |
-| ---------------------- | --------------------------------------------- |
-| **`services`**         | <code>string[]</code>                         |
-| **`name`**             | <code>string</code>                           |
-| **`namePrefix`**       | <code>string</code>                           |
-| **`optionalServices`** | <code>string[]</code>                         |
-| **`allowDuplicates`**  | <code>boolean</code>                          |
-| **`scanMode`**         | <code><a href="#scanmode">ScanMode</a></code> |
-| **`timeout`**          | <code>number</code>                           |
+| Prop                  | Type                 |
+| --------------------- | -------------------- |
+| **`macFilter`**       | <code>string</code>  |
+| **`allowDuplicates`** | <code>boolean</code> |
+| **`timeout`**         | <code>number</code>  |
 
 
 #### PluginListenerHandle
@@ -171,27 +253,47 @@ const status = await AbrevvaBLEClient.disengage(
 | **`value`** | <code>string</code> |
 
 
-#### ScanResultInternal
-
-| Prop                   | Type                                            |
-| ---------------------- | ----------------------------------------------- |
-| **`device`**           | <code><a href="#bledevice">BleDevice</a></code> |
-| **`localName`**        | <code>string</code>                             |
-| **`rssi`**             | <code>number</code>                             |
-| **`txPower`**          | <code>number</code>                             |
-| **`manufacturerData`** | <code>{ [key: string]: T; }</code>              |
-| **`serviceData`**      | <code>{ [key: string]: T; }</code>              |
-| **`uuids`**            | <code>string[]</code>                           |
-| **`rawAdvertisement`** | <code>T</code>                                  |
-
-
 #### BleDevice
 
-| Prop           | Type                  |
-| -------------- | --------------------- |
-| **`deviceId`** | <code>string</code>   |
-| **`name`**     | <code>string</code>   |
-| **`uuids`**    | <code>string[]</code> |
+| Prop                    | Type                                                                              |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| **`deviceId`**          | <code>string</code>                                                               |
+| **`name`**              | <code>string</code>                                                               |
+| **`advertisementData`** | <code><a href="#bledeviceadvertisementdata">BleDeviceAdvertisementData</a></code> |
+
+
+#### BleDeviceAdvertisementData
+
+| Prop                   | Type                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------- |
+| **`rssi`**             | <code>number</code>                                                             |
+| **`isConnectable`**    | <code>boolean</code>                                                            |
+| **`manufacturerData`** | <code><a href="#bledevicemanufacturerdata">BleDeviceManufacturerData</a></code> |
+
+
+#### BleDeviceManufacturerData
+
+| Prop                           | Type                                                                                                  |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| **`companyIdentifier`**        | <code>string</code>                                                                                   |
+| **`version`**                  | <code>number</code>                                                                                   |
+| **`componentType`**            | <code>'handle' \| 'escutcheon' \| 'cylinder' \| 'wallreader' \| 'emzy' \| 'iobox' \| 'unknown'</code> |
+| **`mainFirmwareVersionMajor`** | <code>number</code>                                                                                   |
+| **`mainFirmwareVersionMinor`** | <code>number</code>                                                                                   |
+| **`mainFirmwareVersionPatch`** | <code>number</code>                                                                                   |
+| **`componentHAL`**             | <code>string</code>                                                                                   |
+| **`batteryStatus`**            | <code>'battery-full' \| 'battery-empty'</code>                                                        |
+| **`mainConstructionMode`**     | <code>boolean</code>                                                                                  |
+| **`subConstructionMode`**      | <code>boolean</code>                                                                                  |
+| **`isOnline`**                 | <code>boolean</code>                                                                                  |
+| **`officeModeEnabled`**        | <code>boolean</code>                                                                                  |
+| **`twoFactorRequired`**        | <code>boolean</code>                                                                                  |
+| **`officeModeActive`**         | <code>boolean</code>                                                                                  |
+| **`identifier`**               | <code>string</code>                                                                                   |
+| **`subFirmwareVersionMajor`**  | <code>number</code>                                                                                   |
+| **`subFirmwareVersionMinor`**  | <code>number</code>                                                                                   |
+| **`subFirmwareVersionPatch`**  | <code>number</code>                                                                                   |
+| **`subComponentIdentifier`**   | <code>string</code>                                                                                   |
 
 
 #### DeviceIdOptions
@@ -249,7 +351,7 @@ const status = await AbrevvaBLEClient.disengage(
 | **`mobileId`**           | <code>string</code>  |
 | **`mobileDeviceKey`**    | <code>string</code>  |
 | **`mobileGroupId`**      | <code>string</code>  |
-| **`mobileAccessData`**   | <code>string</code>  |
+| **`mediumAccessData`**   | <code>string</code>  |
 | **`isPermanentRelease`** | <code>boolean</code> |
 
 
@@ -269,17 +371,5 @@ const status = await AbrevvaBLEClient.disengage(
 | **verify**                  | (options: { publicKey: string; data: string; signature: string; }) =&gt; Promise&lt;void&gt;                                                        |
 | **random**                  | (options: { numBytes: number; }) =&gt; Promise&lt;{ value: string; }&gt;                                                                            |
 | **derive**                  | (options: { key: string; salt: string; info: string; length: number; }) =&gt; Promise&lt;{ value: string; }&gt;                                     |
-
-
-### Enums
-
-
-#### ScanMode
-
-| Members                     | Value          |
-| --------------------------- | -------------- |
-| **`SCAN_MODE_LOW_POWER`**   | <code>0</code> |
-| **`SCAN_MODE_BALANCED`**    | <code>1</code> |
-| **`SCAN_MODE_LOW_LATENCY`** | <code>2</code> |
 
 </docgen-api>

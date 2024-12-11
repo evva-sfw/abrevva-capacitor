@@ -1,26 +1,10 @@
 import type { PluginListenerHandle } from "@capacitor/core";
 
+export type Data = DataView | string;
+
 export interface InitializeOptions {
   androidNeverForLocation?: boolean;
 }
-
-export enum ScanMode {
-  SCAN_MODE_LOW_POWER = 0,
-  SCAN_MODE_BALANCED = 1,
-  SCAN_MODE_LOW_LATENCY = 2,
-}
-
-export interface RequestBleDeviceOptions {
-  services?: string[];
-  name?: string;
-  namePrefix?: string;
-  optionalServices?: string[];
-  allowDuplicates?: boolean;
-  scanMode?: ScanMode;
-  timeout?: number;
-}
-
-export type Data = DataView | string;
 
 export interface BooleanResult {
   value: boolean;
@@ -38,32 +22,44 @@ export interface TimeoutOptions {
   timeout?: number;
 }
 
+export interface BleScannerOptions {
+  macFilter?: string;
+  allowDuplicates?: boolean;
+  timeout?: number;
+}
+
+export interface BleDeviceAdvertisementData {
+  rssi?: number;
+  isConnectable?: boolean;
+  manufacturerData?: BleDeviceManufacturerData;
+}
+
+export interface BleDeviceManufacturerData {
+  companyIdentifier?: string;
+  version?: number;
+  componentType?: "handle" | "escutcheon" | "cylinder" | "wallreader" | "emzy" | "iobox" | "unknown";
+  mainFirmwareVersionMajor?: number;
+  mainFirmwareVersionMinor?: number;
+  mainFirmwareVersionPatch?: number;
+  componentHAL?: string;
+  batteryStatus?: "battery-full" | "battery-empty";
+  mainConstructionMode?: boolean;
+  subConstructionMode?: boolean;
+  isOnline?: boolean;
+  officeModeEnabled?: boolean;
+  twoFactorRequired?: boolean;
+  officeModeActive?: boolean;
+  identifier?: string;
+  subFirmwareVersionMajor?: number;
+  subFirmwareVersionMinor?: number;
+  subFirmwareVersionPatch?: number;
+  subComponentIdentifier?: string;
+}
+
 export interface BleDevice {
   deviceId: string;
   name?: string;
-  uuids?: string[];
-}
-
-export interface ScanResult {
-  device: BleDevice;
-  localName?: string;
-  rssi?: number;
-  txPower?: number;
-  manufacturerData?: { [key: string]: DataView };
-  serviceData?: { [key: string]: DataView };
-  uuids?: string[];
-  rawAdvertisement?: DataView;
-}
-
-export interface ScanResultInternal<T = Data> {
-  device: BleDevice;
-  localName?: string;
-  rssi?: number;
-  txPower?: number;
-  manufacturerData?: { [key: string]: T };
-  serviceData?: { [key: string]: T };
-  uuids?: string[];
-  rawAdvertisement?: T;
+  advertisementData?: BleDeviceAdvertisementData;
 }
 
 export interface ReadOptions {
@@ -92,8 +88,34 @@ export interface DisengageOptions {
   mobileId: string;
   mobileDeviceKey: string;
   mobileGroupId: string;
-  mobileAccessData: string;
+  mediumAccessData: string;
   isPermanentRelease: boolean;
+}
+
+export enum DisengageStatusType {
+  /// Component
+  Authorized = "AUTHORIZED",
+  AuthorizedPermanentEngage = "AUTHORIZED_PERMANENT_ENGAGE",
+  AuthorizedPermanentDisengage = "AUTHORIZED_PERMANENT_DISENGAGE",
+  AuthorizedBatteryLow = "AUTHORIZED_BATTERY_LOW",
+  AuthorizedOffline = "AUTHORIZED_OFFLINE",
+  Unauthorized = "UNAUTHORIZED",
+  UnauthorizedOffline = "UNAUTHORIZED_OFFLINE",
+  SignalLocalization = "SIGNAL_LOCALIZATION",
+  MediumDefectOnline = "MEDIUM_DEFECT_ONLINE",
+  MediumBlacklisted = "MEDIUM_BLACKLISTED",
+  Error = "ERROR",
+
+  /// Interface
+  UnableToConnect = "UNABLE_TO_CONNECT",
+  UnableToSetNotifications = "UNABLE_TO_SET_NOTIFICATIONS",
+  UnableToReadChallenge = "UNABLE_TO_READ_CHALLENGE",
+  UnableToWriteMDF = "UNABLE_TO_WRITE_MDF",
+  AccessCipherError = "ACCESS_CIPHER_ERROR",
+  BleAdapterDisabled = "BLE_ADAPTER_DISABLED",
+  UnknownDevice = "UNKNOWN_DEVICE",
+  UnknownStatusCode = "UNKNOWN_STATUS_CODE",
+  Timeout = "TIMEOUT",
 }
 
 export interface AbrevvaBLEInterface {
@@ -105,11 +127,13 @@ export interface AbrevvaBLEInterface {
   openLocationSettings(): Promise<void>;
   openBluetoothSettings(): Promise<void>;
   openAppSettings(): Promise<void>;
-  requestLEScan(options?: RequestBleDeviceOptions): Promise<void>;
-  stopLEScan(): Promise<void>;
+  startScan(options?: BleScannerOptions): Promise<void>;
+  stopScan(): Promise<void>;
   addListener(eventName: "onEnabledChanged", listenerFunc: (result: BooleanResult) => void): PluginListenerHandle;
   addListener(eventName: string, listenerFunc: (event: ReadResult) => void): PluginListenerHandle;
-  addListener(eventName: "onScanResult", listenerFunc: (result: ScanResultInternal) => void): PluginListenerHandle;
+  addListener(eventName: "onScanResult", listenerFunc: (result: BleDevice) => void): PluginListenerHandle;
+  addListener(eventName: "onScanStart", listenerFunc: (success: BooleanResult) => void): PluginListenerHandle;
+  addListener(eventName: "onScanStop", listenerFunc: (success: BooleanResult) => void): PluginListenerHandle;
   connect(options: DeviceIdOptions & TimeoutOptions): Promise<void>;
   disconnect(options: DeviceIdOptions): Promise<void>;
   read(options: ReadOptions & TimeoutOptions): Promise<ReadResult>;

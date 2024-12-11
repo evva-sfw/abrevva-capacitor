@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.core:core-ktx:$coreKtx"
 
-    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "1.0.21"
+    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "3.0.1"
 
     testImplementation "junit:junit:$junitVersion"
 

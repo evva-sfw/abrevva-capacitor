@@ -6,10 +6,11 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
+import com.evva.xesar.abrevva.ble.BleDevice
 import com.evva.xesar.abrevva.ble.BleManager
+import com.evva.xesar.abrevva.ble.BleWriteType
 import com.evva.xesar.abrevva.util.bytesToString
 import com.evva.xesar.abrevva.util.stringToBytes
-import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject
 import com.getcapacitor.Logger
 import com.getcapacitor.PermissionState
@@ -18,7 +19,9 @@ import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.getcapacitor.annotation.PermissionCallback
-import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 @CapacitorPlugin(
@@ -194,43 +197,34 @@ class AbrevvaPluginBLE : Plugin() {
     }
 
     @PluginMethod
-    fun requestLEScan(call: PluginCall) {
+    fun startScan(call: PluginCall) {
+        val macFilter = call.getString("macFilter", null)
+        val allowDuplicates = call.getBoolean("allowDuplicates", false)
         val timeout = call.getFloat("timeout", 15000.0F)!!.toLong()
 
-        this.manager.startScan({ success ->
-            if (success) {
-                call.resolve()
-            } else {
-                call.reject("requestLEScan(): failed to start")
-            }
-        }, { result ->
-            Logger.debug(tag, "Found device: ${result.device.address}")
-
-            val scanResult = getScanResultFromNordic(result)
+        this.manager.startScan({ device ->
+            Logger.debug(tag, "onScanResult(): device found: ${device.address}")
+            val bleDevice = getBleDeviceData(device)
             try {
-                notifyListeners("onScanResult", scanResult)
-            } catch (e: java.util.ConcurrentModificationException) {
-                Logger.error(tag, "requestLEScan()", e)
+                notifyListeners("onScanResult", bleDevice)
+            } catch (e: Exception) {
+                Logger.error(tag, "onScanResult()", e)
             }
-        }, { address ->
-            try {
-                notifyListeners("connected|${address}", null)
-            } catch (e: java.util.ConcurrentModificationException) {
-                Logger.error(tag, "onConnect()", e)
-            }
-        }, { address ->
-            try {
-                notifyListeners("disconnected|${address}", null)
-            } catch (e: java.util.ConcurrentModificationException) {
-                Logger.error(tag, "onDisconnect()", e)
-            }
-        },
-            timeout
-        )
+        }, { success ->
+            val data = JSObject()
+            data.put("value", success)
+            notifyListeners("onScanStart", data)
+            call.resolve()
+        }, { success ->
+            val data = JSObject()
+            data.put("value", success)
+            notifyListeners("onScanStop", data)
+            call.resolve()
+        }, macFilter, allowDuplicates, timeout)
     }
 
     @PluginMethod
-    fun stopLEScan(call: PluginCall) {
+    fun stopScan(call: PluginCall) {
         manager.stopScan()
         call.resolve()
     }
@@ -240,12 +234,26 @@ class AbrevvaPluginBLE : Plugin() {
     fun connect(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
         val timeout = call.getFloat("timeout", 16000.0F)!!.toLong()
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("connect(): device not found")
+        }
 
-        manager.connect(deviceId, { success ->
+        manager.connect(device, { success ->
             if (success) {
+                try {
+                    notifyListeners("connected|${deviceId}", null)
+                } catch (e: java.util.ConcurrentModificationException) {
+                    Logger.error(tag, "onConnect()", e)
+                }
                 call.resolve()
             } else {
                 call.reject("connect(): failed to connect after $timeout ms")
+            }
+        }, {
+            try {
+                notifyListeners("disconnected|${deviceId}", null)
+            } catch (e: java.util.ConcurrentModificationException) {
+                Logger.error(tag, "onConnect()", e)
             }
         }, timeout)
     }
@@ -254,9 +262,17 @@ class AbrevvaPluginBLE : Plugin() {
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
     fun disconnect(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("disconnect(): device not found")
+        }
 
-        manager.disconnect(deviceId) { success ->
+        manager.disconnect(device) { success ->
             if (success) {
+                try {
+                    notifyListeners("disconnected|${deviceId}", null)
+                } catch (e: java.util.ConcurrentModificationException) {
+                    Logger.error(tag, "onDisconnect()", e)
+                }
                 call.resolve()
             } else {
                 call.reject("disconnect(): failed to disconnect")
@@ -266,55 +282,70 @@ class AbrevvaPluginBLE : Plugin() {
 
     @PluginMethod
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    @OptIn(DelicateCoroutinesApi::class)
     fun read(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
         val timeout = call.getFloat("timeout", 10000.0F)!!.toLong()
-        val characteristic = getCharacteristic(call)
-            ?: return call.reject("read(): bad characteristic")
+        val characteristic = getCharacteristic(call) ?: run {
+            return call.reject("read(): bad characteristic")
+        }
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("read(): device not found")
+        }
 
-        manager.read(deviceId, characteristic.first, characteristic.second, { success, data ->
-            if (success) {
+        GlobalScope.launch {
+            val data = device.read(characteristic.first, characteristic.second, timeout)
+            if (data != null) {
                 val ret = JSObject()
-                ret.put("value", bytesToString(data!!))
+                ret.put("value", bytesToString(data))
                 call.resolve(ret)
             } else {
                 call.reject("read(): failed to read from device")
             }
-        }, timeout)
+        }
     }
 
     @PluginMethod
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    @OptIn(DelicateCoroutinesApi::class)
     fun write(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
         val timeout = call.getFloat("timeout", 10000.0F)!!.toLong()
-        val characteristic =
-            getCharacteristic(call) ?: return call.reject("read(): bad characteristic")
-        val value =
-            call.getString("value", null) ?: return call.reject("write(): missing value for write")
+        val characteristic = getCharacteristic(call) ?: run {
+            return call.reject("write(): bad characteristic")
+        }
+        val value = call.getString("value", null) ?: run {
+            return call.reject("write(): missing value for write")
+        }
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("write(): device not found")
+        }
 
-        manager.write(
-            deviceId,
-            characteristic.first,
-            characteristic.second,
-            stringToBytes(value),
-            { success ->
-                if (success) {
-                    call.resolve()
-                } else {
-                    call.reject("write(): failed to write to device")
-                }
-            },
-            timeout
-        )
+        GlobalScope.launch {
+            val success = device.write(
+                characteristic.first,
+                characteristic.second,
+                stringToBytes(value),
+                BleWriteType.NO_RESPONSE,
+                timeout
+            )
+            if (success) {
+                call.resolve()
+            } else {
+                call.reject("write(): failed to write to device")
+            }
+        }
     }
 
     @PluginMethod
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
     fun signalize(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("signalize(): device not found")
+        }
 
-        manager.signalize(deviceId) { success ->
+        manager.signalize(device) { success ->
             if (success) {
                 call.resolve()
             } else {
@@ -330,15 +361,18 @@ class AbrevvaPluginBLE : Plugin() {
         val mobileId = call.getString("mobileId", "")!!
         val mobileDeviceKey = call.getString("mobileDeviceKey", "")!!
         val mobileGroupId = call.getString("mobileGroupId", "")!!
-        val mobileAccessData = call.getString("mobileAccessData", "")!!
+        val mediumAccessData = call.getString("mediumAccessData", "")!!
         val isPermanentRelease = call.getBoolean("isPermanentRelease", false)!!
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("disengage(): device not found")
+        }
 
         manager.disengage(
-            deviceId,
+            device,
             mobileId,
             mobileDeviceKey,
             mobileGroupId,
-            mobileAccessData,
+            mediumAccessData,
             isPermanentRelease
         ) { status ->
             val result = JSObject()
@@ -350,50 +384,53 @@ class AbrevvaPluginBLE : Plugin() {
 
     @PluginMethod
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    @OptIn(DelicateCoroutinesApi::class)
     fun startNotifications(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
-        val characteristic =
-            getCharacteristic(call)
-                ?: return call.reject("startNotifications(): bad characteristic")
+        val characteristic = getCharacteristic(call) ?: run {
+            return call.reject("startNotifications(): bad characteristic")
+        }
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("startNotifications(): device not found")
+        }
 
-        manager.startNotifications(
-            deviceId,
-            characteristic.first,
-            characteristic.second,
-            { success ->
-                if (success) {
-                    call.resolve()
-                } else {
-                    call.reject("startNotifications(): failed to set notifications")
-                }
-            }, { data ->
-                val key =
-                    "notification|${deviceId}|${(characteristic.first)}|${(characteristic.second)}"
+        GlobalScope.launch {
+            val success = device.setNotifications(characteristic.first,
+                characteristic.second, { data ->
+                    val key =
+                        "notification|${deviceId}|${(characteristic.first)}|${(characteristic.second)}"
 
-                val ret = JSObject()
-                ret.put("value", bytesToString(data))
+                    val ret = JSObject()
+                    ret.put("value", bytesToString(data))
 
-                try {
-                    notifyListeners(key, ret)
-                } catch (e: java.util.ConcurrentModificationException) {
-                    Logger.error(tag, "startNotifications()", e)
-                }
-            })
+                    try {
+                        notifyListeners(key, ret)
+                    } catch (e: java.util.ConcurrentModificationException) {
+                        Logger.error(tag, "startNotifications()", e)
+                    }
+                })
+            if (success) {
+                call.resolve()
+            } else {
+                call.reject("startNotifications(): failed to set notifications")
+            }
+        }
     }
 
     @PluginMethod
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    @OptIn(DelicateCoroutinesApi::class)
     fun stopNotifications(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
-        val characteristic =
-            getCharacteristic(call)
-                ?: return call.reject("stopNotifications(): bad characteristic")
+        val characteristic = getCharacteristic(call) ?: run {
+            return call.reject("stopNotifications(): bad characteristic")
+        }
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("stopNotifications(): device not found")
+        }
 
-        manager.stopNotifications(
-            deviceId,
-            characteristic.first,
-            characteristic.second
-        ) { success ->
+        GlobalScope.launch {
+            val success = device.stopNotifications(characteristic.first, characteristic.second)
             if (success) {
                 call.resolve()
             } else {
@@ -436,80 +473,76 @@ class AbrevvaPluginBLE : Plugin() {
         return Pair(serviceUUID, characteristicUUID)
     }
 
-    private fun getBleDeviceFromNordic(result: BleScanResult): JSObject {
-        val bleDevice = JSObject()
+    private fun getBleDeviceData(device: BleDevice): JSObject {
+        val bleDeviceData = JSObject()
 
-        bleDevice.put("deviceId", result.device.address)
+        bleDeviceData.put("deviceId", device.address)
+        bleDeviceData.put("name", device.localName)
 
-        if (result.device.hasName) {
-            bleDevice.put("name", result.device.name)
-        }
+        val advertisementData = JSObject()
+        device.advertisementData?.let {
+            advertisementData.put("rssi", it.rssi)
+            advertisementData.put("isConnectable", it.isConnectable)
 
-        val uuids = JSArray()
-        result.data?.scanRecord?.serviceUuids?.forEach { uuid -> uuids.put(uuid.toString()) }
-
-        if (uuids.length() > 0) {
-            bleDevice.put("uuids", uuids)
-        }
-
-        return bleDevice
-    }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    private fun getScanResultFromNordic(result: BleScanResult): JSObject {
-        val scanResult = JSObject()
-        val bleDevice = getBleDeviceFromNordic(result)
-
-        scanResult.put("device", bleDevice)
-
-        if (result.device.hasName) {
-            scanResult.put("localName", result.device.name)
-        }
-        if (result.data?.rssi != null) {
-            scanResult.put("rssi", result.data!!.rssi)
-        }
-        if (result.data?.txPower != null) {
-            scanResult.put("txPower", result.data!!.txPower)
-        } else {
-            scanResult.put("txPower", 127)
-        }
-
-        val manufacturerData = JSObject()
-
-        val scanRecordBytes = result.data?.scanRecord?.bytes
-        if (scanRecordBytes != null) {
-            try {
-                // Extract EVVA manufacturer-id
-                val keyHex = scanRecordBytes.getByte(6)?.toHexString() + scanRecordBytes.getByte(5)
-                    ?.toHexString()
-                val keyDec = keyHex.toInt(16)
-
-                // Slice out manufacturer data
-                val bytes = scanRecordBytes.copyOfRange(7, scanRecordBytes.size)
-
-                manufacturerData.put(keyDec.toString(), bytesToString(bytes.value))
-            } catch (e: Exception) {
-                Logger.warn("getScanResultFromNordic(): invalid manufacturer data")
+            val manufacturerData = JSObject()
+            it.manufacturerData?.let { data ->
+                manufacturerData.put("companyIdentifier", data.companyIdentifier.toInt())
+                manufacturerData.put("version", data.version.toInt())
+                manufacturerData.put(
+                    "componentType",
+                    when (data.componentType.toInt()) {
+                        98 -> "escutcheon"
+                        100 -> "handle"
+                        105 -> "iobox"
+                        109 -> "emzy"
+                        119 -> "wallreader"
+                        122 -> "cylinder"
+                        else -> "unknown"
+                    }
+                )
+                manufacturerData.put(
+                    "mainFirmwareVersionMajor",
+                    data.mainFirmwareVersionMajor.toInt()
+                )
+                manufacturerData.put(
+                    "mainFirmwareVersionMinor",
+                    data.mainFirmwareVersionMinor.toInt()
+                )
+                manufacturerData.put(
+                    "mainFirmwareVersionPatch",
+                    data.mainFirmwareVersionPatch.toInt()
+                )
+                manufacturerData.put("componentHAL", data.componentHAL)
+                manufacturerData.put(
+                    "batteryStatus",
+                    if (data.batteryStatus) "battery-full" else "battery-empty"
+                )
+                manufacturerData.put("mainConstructionMode", data.mainConstructionMode)
+                manufacturerData.put("subConstructionMode", data.subConstructionMode)
+                manufacturerData.put("isOnline", data.isOnline)
+                manufacturerData.put("officeModeEnabled", data.officeModeEnabled)
+                manufacturerData.put("twoFactorRequired", data.twoFactorRequired)
+                manufacturerData.put("officeModeActive", data.officeModeActive)
+                manufacturerData.put("reservedBits", data.reservedBits)
+                manufacturerData.put("identifier", data.identifier)
+                manufacturerData.put(
+                    "subFirmwareVersionMajor",
+                    data.subFirmwareVersionMajor?.toInt()
+                )
+                manufacturerData.put(
+                    "subFirmwareVersionMinor",
+                    data.subFirmwareVersionMinor?.toInt()
+                )
+                manufacturerData.put(
+                    "subFirmwareVersionPatch",
+                    data.subFirmwareVersionPatch?.toInt()
+                )
+                manufacturerData.put("subComponentIdentifier", data.subComponentIdentifier)
             }
+            advertisementData.put("manufacturerData", manufacturerData)
         }
+        bleDeviceData.put("advertisementData", advertisementData)
 
-        scanResult.put("manufacturerData", manufacturerData)
-
-        val serviceDataObject = JSObject()
-        val serviceData = result.data?.scanRecord?.serviceData
-        serviceData?.forEach {
-            serviceDataObject.put(it.key.toString(), bytesToString(it.value.value))
-        }
-        scanResult.put("serviceData", serviceDataObject)
-
-        val uuids = JSArray()
-        result.data?.scanRecord?.serviceUuids?.forEach { uuid -> uuids.put(uuid.toString()) }
-        scanResult.put("uuids", uuids)
-        scanResult.put(
-            "rawAdvertisement",
-            result.data?.scanRecord?.bytes?.toString()
-        )
-
-        return scanResult
+        return bleDeviceData
     }
 }

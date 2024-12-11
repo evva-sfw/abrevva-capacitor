@@ -5,12 +5,14 @@ import { Capacitor } from "@capacitor/core";
 import type { AbrevvaBLEClientInterface } from "./client";
 import { AbrevvaBLEClient } from "./client";
 import { hexStringToDataView, numbersToDataView } from "./conversion";
-import type { BleDevice } from "./definitions";
+import { BleDevice, DisengageStatusType } from "./definitions";
 import { AbrevvaBLE } from "./plugin";
 
 interface AbrevvaBLEClientWithPrivate extends AbrevvaBLEClientInterface {
   eventListeners: Map<string, PluginListenerHandle>;
-  scanListener: PluginListenerHandle | null;
+  scanResultListener: PluginListenerHandle | null;
+  scanStartListener: PluginListenerHandle | null;
+  scanStopListener: PluginListenerHandle | null;
 }
 
 jest.mock("@capacitor/core", () => {
@@ -30,8 +32,8 @@ jest.mock("./plugin", () => {
     startEnabledNotifications: jest.fn(),
     stopEnabledNotifications: jest.fn(),
     requestDevice: jest.fn(),
-    requestLEScan: jest.fn(),
-    stopLEScan: jest.fn(),
+    startScan: jest.fn(),
+    stopScan: jest.fn(),
     connect: jest.fn(),
     createBond: jest.fn(),
     isBonded: jest.fn(),
@@ -125,30 +127,41 @@ describe("AbrevvaBLEClient", () => {
     ).toBeUndefined();
   });
 
-  it("should run requestLEScan", async () => {
-    const mockCallback = jest.fn();
-    const mockScanListener = {
+  it("should run startScan", async () => {
+    const mockScanResultCallback = jest.fn();
+    const mockScanStartCallback = jest.fn();
+    const mockScanStopCallback = jest.fn();
+
+    const mockScanResultListener = {
       remove: jest.fn(),
     };
-    (AbrevvaBLE.addListener as jest.Mock).mockReturnValue(mockScanListener);
-    await AbrevvaBLEClient.requestLEScan({}, mockCallback);
+
+    (AbrevvaBLE.addListener as jest.Mock).mockReturnValue(mockScanResultListener);
+    await AbrevvaBLEClient.startScan({}, mockScanResultCallback, mockScanStartCallback, mockScanStopCallback);
+
     expect(AbrevvaBLE.addListener).toHaveBeenCalledWith("onScanResult", expect.any(Function));
-    expect((AbrevvaBLEClient as unknown as AbrevvaBLEClientWithPrivate).scanListener).toBe(mockScanListener);
-    expect(AbrevvaBLE.requestLEScan).toHaveBeenCalledTimes(1);
+    expect(AbrevvaBLE.addListener).toHaveBeenCalledWith("onScanStart", expect.any(Function));
+    expect(AbrevvaBLE.addListener).toHaveBeenCalledWith("onScanStop", expect.any(Function));
+
+    expect((AbrevvaBLEClient as unknown as AbrevvaBLEClientWithPrivate).scanResultListener).toBe(
+      mockScanResultListener,
+    );
+
+    expect(AbrevvaBLE.startScan).toHaveBeenCalledTimes(1);
   });
 
-  it("should run stopLEScan", async () => {
+  it("should run stopScan", async () => {
     const mockCallback = jest.fn();
     const mockScanListener = {
       remove: jest.fn(),
     };
     (AbrevvaBLE.addListener as jest.Mock).mockReturnValue(mockScanListener);
-    await AbrevvaBLEClient.requestLEScan({}, mockCallback);
-    expect((AbrevvaBLEClient as unknown as AbrevvaBLEClientWithPrivate).scanListener).toBe(mockScanListener);
-    await AbrevvaBLEClient.stopLEScan();
+    await AbrevvaBLEClient.startScan({}, mockCallback);
+    expect((AbrevvaBLEClient as unknown as AbrevvaBLEClientWithPrivate).scanResultListener).toBe(mockScanListener);
+    await AbrevvaBLEClient.stopScan();
     expect(mockScanListener.remove).toHaveBeenCalledTimes(1);
-    expect((AbrevvaBLEClient as unknown as AbrevvaBLEClientWithPrivate).scanListener).toBe(null);
-    expect(AbrevvaBLE.stopLEScan).toHaveBeenCalledTimes(1);
+    expect((AbrevvaBLEClient as unknown as AbrevvaBLEClientWithPrivate).scanResultListener).toBe(null);
+    expect(AbrevvaBLE.stopScan).toHaveBeenCalledTimes(1);
   });
 
   it("should run connect without disconnect callback", async () => {
@@ -261,7 +274,7 @@ describe("AbrevvaBLEClient", () => {
     expect(Capacitor.getPlatform()).toBe("android");
 
     (AbrevvaBLE.disengage as jest.Mock).mockReturnValue({
-      value: "ACCESS_STATUS_AUTHORIZED",
+      value: DisengageStatusType.Authorized,
     });
     const result = await AbrevvaBLEClient.disengage(mockDevice.deviceId, "", "", "", "", false);
     expect(AbrevvaBLE.disengage).toHaveBeenCalledWith({
@@ -269,10 +282,10 @@ describe("AbrevvaBLEClient", () => {
       mobileId: "",
       mobileDeviceKey: "",
       mobileGroupId: "",
-      mobileAccessData: "",
+      mediumAccessData: "",
       isPermanentRelease: false,
     });
-    expect(result).toEqual("ACCESS_STATUS_AUTHORIZED");
+    expect(result).toEqual(DisengageStatusType.Authorized);
   });
 
   it("should run startNotifications", async () => {
