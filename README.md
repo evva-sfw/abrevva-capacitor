@@ -7,7 +7,7 @@
 [![GitHub branch check runs](https://img.shields.io/github/check-runs/evva-sfw/abrevva-capacitor/main)]([URL](https://github.com/evva-sfw/abrevva-capacitor/actions))
 [![EVVA License](https://img.shields.io/badge/license-EVVA_License-yellow.svg?color=fce500&logo=data:image/svg+xml;base64,PCEtLSBHZW5lcmF0ZWQgYnkgSWNvTW9vbi5pbyAtLT4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjY0MCIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgNjQwIDEwMjQiPgo8ZyBpZD0iaWNvbW9vbi1pZ25vcmUiPgo8L2c+CjxwYXRoIGZpbGw9IiNmY2U1MDAiIGQ9Ik02MjIuNDIzIDUxMS40NDhsLTMzMS43NDYtNDY0LjU1MmgtMjg4LjE1N2wzMjkuODI1IDQ2NC41NTItMzI5LjgyNSA0NjYuNjY0aDI3NS42MTJ6Ij48L3BhdGg+Cjwvc3ZnPgo=)](LICENSE)
 
-The EVVA Capacitor Plugin is a collection of tools to work with electronical EVVA access components. It allows for scanning and connecting via BLE.
+The EVVA Abrevva Capacitor Plugin is a collection of tools to work with electronical EVVA access components. It allows for scanning and connecting via BLE.
 
 - [Features](#features)
 - [Requirements](#requirements)
@@ -16,9 +16,9 @@ The EVVA Capacitor Plugin is a collection of tools to work with electronical EVV
 
 ## Features
 
-- BLE Scanner for EVVA components in range
-- Localize EVVA components encountered by a scan
-- Disengage EVVA components encountered by a scan
+- BLE Scanner for EVVA components
+- Localize scanned EVVA components
+- Disengage scanned EVVA components
 - Read / Write data via BLE
 
 ## Requirements
@@ -51,7 +51,7 @@ npx cap sync
 ### Initialize and scan for EVVA components
 
 ```typescript
-import { AbrevvaBLEClient, ScanResult } from "@evva/abrevva-capacitor";
+import { AbrevvaBLEClient, BleDevice } from "@evva/abrevva-capacitor";
 
 class ExampleClass {
   private devices: BleDevice[];
@@ -130,7 +130,8 @@ const success = await AbrevvaBLEClient.signalize('deviceId');
 
 ### Disengage EVVA components
 
-For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired in the form of access media metadata from the Xesar software.
+For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired
+in the form of access media metadata from the Xesar software.
 
 ```typescript
 const status = await AbrevvaBLEClient.disengage(
