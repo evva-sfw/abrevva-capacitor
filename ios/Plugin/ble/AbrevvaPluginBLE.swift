@@ -215,7 +215,6 @@ public class AbrevvaPluginBLE: CAPPlugin {
         let mobileGroupID = call.getString("mobileGroupId") ?? ""
         let mediumAccessData = call.getString("mediumAccessData") ?? ""
         let isPermanentRelease = call.getBool("isPermanentRelease") ?? false
-        let timeout = call.getDouble("timeout").map { Int($0) } ?? nil
 
         Task {
             let status = await self.bleManager!.disengage(
@@ -224,8 +223,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
                 mobileDeviceKey,
                 mobileGroupID,
                 mediumAccessData,
-                isPermanentRelease,
-                timeout
+                isPermanentRelease
             )
             call.resolve(["value": status.rawValue])
         }
@@ -346,7 +344,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
             return bleDeviceData
         }
 
-        var manufacturerData: [String: Any?] = [
+        let manufacturerData: [String: Any?] = [
             "companyIdentifier": mfData.companyIdentifier,
             "version": mfData.version,
             "mainFirmwareVersionMajor": mfData.mainFirmwareVersionMajor,
