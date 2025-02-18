@@ -7,7 +7,7 @@
 		"HapticsPlugin",
 		"KeyboardPlugin",
 		"StatusBarPlugin",
-		"AbrevvaPluginBLE",
-		"AbrevvaPluginCrypto"
+		"AbrevvaPluginCrypto",
+		"AbrevvaPluginBLE"
 	]
 }
