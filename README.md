@@ -32,17 +32,17 @@ The EVVA Abrevva Capacitor Plugin is a collection of tools to work with electron
 
 ## Installation
 
-### Capacitor 6
+### Capacitor 7
 
 ```
 npm install @evva/abrevva-capacitor
 npx cap sync
 ```
 
-### Capacitor 5
+### Capacitor 6
 
 ```
-npm install @evva/abrevva-capacitor@1.0.1
+npm install @evva/abrevva-capacitor@4.0.1
 npx cap sync
 ```
 
