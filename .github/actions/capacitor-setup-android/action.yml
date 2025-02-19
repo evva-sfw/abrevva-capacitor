@@ -10,7 +10,7 @@ runs:
     - name: Install JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
     - name: Install Android SDK
       uses: android-actions/setup-android@v3

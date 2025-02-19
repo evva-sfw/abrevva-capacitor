@@ -31,7 +31,7 @@ export class BleComponent implements OnInit {
 
   async disengage(device: BleDevice) {
     await AbrevvaBLEClient.stopScan();
-    await AbrevvaBLEClient.disengage(
+    const result = await AbrevvaBLEClient.disengage(
       device.deviceId,
       "mobileId",
       "mobileDeviceKey",
@@ -39,5 +39,6 @@ export class BleComponent implements OnInit {
       "mediumAccessData",
       true,
     );
+    console.log(`Disengage Status: ${result}`);
   }
 }

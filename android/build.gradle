@@ -14,7 +14,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath 'com.android.tools.build:gradle:8.7.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
@@ -24,11 +24,11 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace "com.evva.xesar.abrevva.plugins.capacitor"
-    compileSdk project.hasProperty('compileSdk') ? rootProject.ext.compileSdk : 34
+    compileSdk project.hasProperty('compileSdk') ? rootProject.ext.compileSdk : 35
 
     defaultConfig {
         minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 29
-        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
 
         versionCode 1
         versionName "1.0"
@@ -45,11 +45,11 @@ android {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        jvmTarget = JavaVersion.VERSION_21
     }
     packagingOptions {
         resources.excludes.add("META-INF/*")
@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.core:core-ktx:$coreKtx"
 
-    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "3.0.1"
+    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "3.0.2"
 
     testImplementation "junit:junit:$junitVersion"
 
