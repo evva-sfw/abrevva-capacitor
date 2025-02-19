@@ -4,34 +4,34 @@ runs:
   using: 'composite'
   steps:
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
       with:
         node-version: lts/*
     - name: Install Ruby
-      uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@32110d4e311bd8996b2a82bf2a43b714ccc91777 # v1.221.0
       with:
         ruby-version: '3.3'
         bundler-cache: true
     - name: Install Swift
-      uses: SwiftyLab/setup-swift@latest
+      uses: SwiftyLab/setup-swift@5825efd16e0e9f41c4e9b94658b7973e16410d5b # v1.9.1
       with:
         swift-version: '5.10.0'
     - name: Cache node_modules
       id: node-modules
-      uses: actions/cache@v4
+      uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
       with:
         path: |
           node_modules
         key: node-modules
     - name: Cache Pods
       id: pods
-      uses: actions/cache@v4
+      uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
       with:
         path: |
           ios/Pods
         key: pods
     - name: Cache Xcode
-      uses: irgaly/xcode-cache@v1.7.2
+      uses: irgaly/xcode-cache@fd644652c5d3fd1f794edcdf839eb1dc03a9021f # v1.8.1
       with:
         key: xcode-deriveddata
         restore-keys: xcode-deriveddata
