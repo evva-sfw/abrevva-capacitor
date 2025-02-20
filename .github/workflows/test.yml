@@ -8,7 +8,7 @@ jobs:
   test_web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup Capacitor Web
         uses: ./.github/actions/capacitor-setup-web
       - name: Run Tests
@@ -16,7 +16,7 @@ jobs:
   test_ios:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup Capacitor iOS
         uses: ./.github/actions/capacitor-setup-ios
       - name: Run Tests
@@ -34,11 +34,11 @@ jobs:
   test_android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup Capacitor Android
         uses: ./.github/actions/capacitor-setup-android
       - name: Run Tests
-        uses: reactivecircus/android-emulator-runner@v2
+        uses: reactivecircus/android-emulator-runner@62dbb605bba737720e10b196cb4220d374026a6d # v2.33.0
         with:
           api-level: 29
           working-directory: android/
