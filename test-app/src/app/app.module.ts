@@ -7,9 +7,10 @@ import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { BleComponent } from "./ble/ble.component";
 import { CryptoComponent } from "./crypto/crypto.component";
+import { CodingStationComponent } from "./cs/cs.component";
 
 @NgModule({
-  declarations: [AppComponent, CryptoComponent, BleComponent],
+  declarations: [AppComponent, CryptoComponent, BleComponent, CodingStationComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

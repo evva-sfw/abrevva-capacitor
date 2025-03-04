@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 
 import { BleComponent } from "./ble/ble.component";
 import { CryptoComponent } from "./crypto/crypto.component";
+import { CodingStationComponent } from "./cs/cs.component";
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: "ble",
     component: BleComponent,
+  },
+  {
+    path: "cs",
+    component: CodingStationComponent,
   },
 ];
 

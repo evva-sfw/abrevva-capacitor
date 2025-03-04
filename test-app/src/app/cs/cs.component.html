@@ -7,16 +7,19 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
   <ion-list style="text-align: center">
-    <ion-button expand="block" fill="clear" [routerLink]="['/ble']"
-      >Ble
+    <ion-button expand="block" fill="clear" (click)="register()"
+      >Register
     </ion-button>
-    <ion-button expand="block" fill="clear" [routerLink]="['/crypto']"
-      >Crypto
+    <ion-button expand="block" fill="clear" (click)="connect()"
+      >Connect
     </ion-button>
-    <ion-button expand="block" fill="clear" [routerLink]="['/cs']"
-      >Coding Station
+    <ion-button expand="block" fill="clear" (click)="disconnect()"
+      >Disconnect
+    </ion-button>
+    <ion-button expand="block" fill="clear" (click)="write()"
+      >Write Medium
     </ion-button>
   </ion-list>
 </ion-content>
