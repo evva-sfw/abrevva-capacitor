@@ -17,15 +17,6 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
 
-    <activity android:name=".nfc.TechFilter" android:label="NFC/TechFilter" android:exported="true">
-      <intent-filter>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-        <action android:name="android.nfc.action.TECH_DISCOVERED" />
-        <action android:name="android.nfc.action.TAG_DISCOVERED" />
-        <data android:mimeType="text/plain" />
-      </intent-filter>
-    </activity>
     <activity
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
       android:name="io.ionic.starter.MainActivity"
