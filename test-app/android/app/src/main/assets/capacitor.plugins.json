@@ -21,6 +21,10 @@
 	},
 	{
 		"pkg": "@evva/abrevva-capacitor",
+		"classpath": "com.evva.xesar.abrevva.plugins.capacitor.AbrevvaPluginCodingStation"
+	},
+	{
+		"pkg": "@evva/abrevva-capacitor",
 		"classpath": "com.evva.xesar.abrevva.plugins.capacitor.AbrevvaPluginCrypto"
 	}
 ]

@@ -6,7 +6,7 @@ ext {
 }
 
 buildscript {
-    ext.kotlinVersion = project.hasProperty('kotlinVersion') ? rootProject.ext.kotlinVersion : '1.9.22'
+    ext.kotlinVersion = project.hasProperty('kotlinVersion') ? rootProject.ext.kotlinVersion : '2.1.10'
     ext.coreKtx = project.hasProperty('coreKtx') ? rootProject.ext.coreKtx : '1.13.1'
 
     repositories {
@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.core:core-ktx:$coreKtx"
 
-    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "3.0.2"
+    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "3.1.0"
 
     testImplementation "junit:junit:$junitVersion"
 

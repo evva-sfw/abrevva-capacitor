@@ -1,7 +1,7 @@
 package com.evva.xesar.abrevva.plugins.capacitor
 
-import com.evva.xesar.abrevva.crypto.AesCCM
-import com.evva.xesar.abrevva.crypto.AesGCM
+import com.evva.xesar.abrevva.crypto.AesCcm
+import com.evva.xesar.abrevva.crypto.AesGcm
 import com.evva.xesar.abrevva.crypto.HKDF
 import com.evva.xesar.abrevva.crypto.SimpleSecureRandom
 import com.evva.xesar.abrevva.crypto.X25519Wrapper
@@ -75,7 +75,7 @@ class AbrevvaPluginCrypto : Plugin() {
         val cipherText: String
         val authTag: String
         try {
-            val ct: ByteArray = AesCCM.encrypt(key, iv, adata, pt, tagLength!!)
+            val ct: ByteArray = AesCcm.encrypt(key, iv, adata, pt, tagLength!!)
             val cipherTextData = ByteArray(pt.size)
             val authTagData = ByteArray(tagLength)
 
@@ -119,7 +119,7 @@ class AbrevvaPluginCrypto : Plugin() {
         val ptPath = call.getString("ptPath", "")
         val ctPath = call.getString("ctPath", "")
 
-        val success = AesGCM.encryptFile(Hex.decode(sharedSecret), ptPath!!, ctPath!!)
+        val success = AesGcm.encryptFile(Hex.decode(sharedSecret), ptPath!!, ctPath!!)
         if (!success) {
             return call.reject(
                 AbrevvaPluginCrypto::class.simpleName,
@@ -152,7 +152,7 @@ class AbrevvaPluginCrypto : Plugin() {
 
         val pt: String
         try {
-            val data: ByteArray = AesCCM.decrypt(key, iv, adata, ct, tagLength)
+            val data: ByteArray = AesCcm.decrypt(key, iv, adata, ct, tagLength)
             if (data.isEmpty()) {
                 return call.reject(
                     AbrevvaPluginCrypto::class.simpleName,
@@ -188,7 +188,7 @@ class AbrevvaPluginCrypto : Plugin() {
         val ctPath = call.getString("ctPath", "")!!
         val ptPath = call.getString("ptPath", "")!!
 
-        val success = AesGCM.decryptFile(sharedSecret, ctPath, ptPath)
+        val success = AesGcm.decryptFile(sharedSecret, ctPath, ptPath)
         if (!success) {
             return call.reject(
                 AbrevvaPluginCrypto::class.simpleName,
@@ -271,7 +271,7 @@ class AbrevvaPluginCrypto : Plugin() {
             )
         }
 
-        val success = AesGCM.decryptFile(sharedSecret, ctPath, ptPath)
+        val success = AesGcm.decryptFile(sharedSecret, ctPath, ptPath)
         if (!success) {
             return call.reject(
                 AbrevvaPluginCrypto::class.simpleName,

@@ -174,6 +174,32 @@ export enum DisengageStatusType {
 }
 ```
 
+### Coding Identification Media
+
+Use the CodingStation to write or update access data onto an EVVA identification medium.
+
+```typescript
+import { AbrevvaCodingStation } from "@evva/abrevva-capacitor";
+
+export class ExampleClass {
+  async writeMedium() {
+    try {
+      await AbrevvaCodingStation.register({
+        url: "url",
+        clientId: "clientId",
+        username: "username",
+        password: "password",
+      });
+      await AbrevvaCodingStation.connect();
+      await AbrevvaCodingStation.write();
+      await AbrevvaCodingStation.disconnect();
+    } catch (e) {
+      console.log(`Failed to write medium: ${e}`);
+    }
+  }
+}
+```
+
 ## API
 
 <docgen-index>
@@ -372,5 +398,25 @@ export enum DisengageStatusType {
 | **verify**                  | (options: { publicKey: string; data: string; signature: string; }) =&gt; Promise&lt;void&gt;                                                        |
 | **random**                  | (options: { numBytes: number; }) =&gt; Promise&lt;{ value: string; }&gt;                                                                            |
 | **derive**                  | (options: { key: string; salt: string; info: string; length: number; }) =&gt; Promise&lt;{ value: string; }&gt;                                     |
+
+
+#### AbrevvaCodingStationInterface
+
+| Method         | Signature                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| **register**   | (options: <a href="#csconnectionoptions">CSConnectionOptions</a>) =&gt; Promise&lt;void&gt; |
+| **connect**    | () =&gt; Promise&lt;void&gt;                                                                |
+| **disconnect** | () =&gt; Promise&lt;void&gt;                                                                |
+| **write**      | () =&gt; Promise&lt;void&gt;                                                                |
+
+
+#### CSConnectionOptions
+
+| Prop           | Type                |
+| -------------- | ------------------- |
+| **`url`**      | <code>string</code> |
+| **`clientId`** | <code>string</code> |
+| **`username`** | <code>string</code> |
+| **`password`** | <code>string</code> |
 
 </docgen-api>

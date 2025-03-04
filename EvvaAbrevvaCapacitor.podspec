@@ -21,5 +21,5 @@ TODO: Add long description of the pod here.
   s.source_files = 'ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}'
 
   s.dependency 'Capacitor'
-  s.dependency 'AbrevvaSDK', '~> 3.0.1'
+  s.dependency 'AbrevvaSDK', '~> 3.1.1'
 end

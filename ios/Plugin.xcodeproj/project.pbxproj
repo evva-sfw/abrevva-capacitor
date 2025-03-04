@@ -11,6 +11,9 @@
 		07C03F2D2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C03F2A2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07C03F2E2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07C03F2B2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift */; };
 		07C03F2F2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C03F2C2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m */; };
+		07EFADDF2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.h in Headers */ = {isa = PBXBuildFile; fileRef = 07EFADDC2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.h */; };
+		07EFADE02D3FD3DC003E82FF /* AbrevvaPluginCodingStation.m in Sources */ = {isa = PBXBuildFile; fileRef = 07EFADDD2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.m */; };
+		07EFADE12D3FD3DC003E82FF /* AbrevvaPluginCodingStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EFADDE2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.swift */; };
 		39215DE05972E348690FD2E8 /* Pods_Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36AAFE69F1EE46F704AC5B65 /* Pods_Plugin.framework */; };
 		50ADFF92201F53D600D50D53 /* Plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFF88201F53D600D50D53 /* Plugin.framework */; };
 		50ADFF97201F53D600D50D53 /* AbrevvaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFF96201F53D600D50D53 /* AbrevvaTests.swift */; };
@@ -39,6 +42,9 @@
 		07C03F2A2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbrevvaPluginCrypto.h; sourceTree = "<group>"; };
 		07C03F2B2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbrevvaPluginCrypto.swift; sourceTree = "<group>"; };
 		07C03F2C2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbrevvaPluginCrypto.m; sourceTree = "<group>"; };
+		07EFADDC2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbrevvaPluginCodingStation.h; sourceTree = "<group>"; };
+		07EFADDD2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbrevvaPluginCodingStation.m; sourceTree = "<group>"; };
+		07EFADDE2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbrevvaPluginCodingStation.swift; sourceTree = "<group>"; };
 		36AAFE69F1EE46F704AC5B65 /* Pods_Plugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Plugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39CF867CF652175DD6EE32D1 /* Pods_PluginTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PluginTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50ADFF88201F53D600D50D53 /* Plugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Plugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,6 +112,16 @@
 			path = util;
 			sourceTree = "<group>";
 		};
+		07EFADDB2D3FD38D003E82FF /* cs */ = {
+			isa = PBXGroup;
+			children = (
+				07EFADDC2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.h */,
+				07EFADDD2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.m */,
+				07EFADDE2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.swift */,
+			);
+			path = cs;
+			sourceTree = "<group>";
+		};
 		187358A3D2584FA77C48359B /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +156,7 @@
 		50ADFF8A201F53D600D50D53 /* Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				07EFADDB2D3FD38D003E82FF /* cs */,
 				07B3CCB82B5E95BF00F2C9EA /* ble */,
 				07B3CCB92B5E95CE00F2C9EA /* crypto */,
 				07B3CCBB2B5EA5EA00F2C9EA /* util */,
@@ -178,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				07C03F2D2B4EE3A70095BC1A /* AbrevvaPluginCrypto.h in Headers */,
+				07EFADDF2D3FD3DC003E82FF /* AbrevvaPluginCodingStation.h in Headers */,
 				50ADFF99201F53D600D50D53 /* AbrevvaPluginBLE.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,11 +380,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07EFADE12D3FD3DC003E82FF /* AbrevvaPluginCodingStation.swift in Sources */,
 				50E1A94820377CB70090CE1A /* AbrevvaPluginBLE.swift in Sources */,
 				07B3CCBD2B5EA60C00F2C9EA /* Logging.swift in Sources */,
 				50ADFFA82020EE4F00D50D53 /* AbrevvaPluginBLE.m in Sources */,
 				07C03F2E2B4EE3A70095BC1A /* AbrevvaPluginCrypto.swift in Sources */,
 				07C03F2F2B4EE3A70095BC1A /* AbrevvaPluginCrypto.m in Sources */,
+				07EFADE02D3FD3DC003E82FF /* AbrevvaPluginCodingStation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
