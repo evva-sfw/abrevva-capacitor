@@ -16,7 +16,7 @@
     "LICENSE"
   ],
   "author": "EVVA Sicherheitstechnologie GmbH",
-  "license": "SEE LICENSE IN <LICENSE>",
+  "license": "EVVA Software License",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evva-sfw/abrevva-capacitor.git"
