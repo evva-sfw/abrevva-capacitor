@@ -21,6 +21,10 @@ runs:
         xcode-select -p
         xcrun --sdk iphonesimulator --show-sdk-path || true
         xcrun --show-sdk-platform-path || true
+        echo "CPATH=$CPATH"
+        echo "C_INCLUDE_PATH=$C_INCLUDE_PATH"
+        echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
+        echo "SDKROOT=$SDKROOT"
     - name: Install Swift
       uses: SwiftyLab/setup-swift@5825efd16e0e9f41c4e9b94658b7973e16410d5b # v1.9.1
       with:
