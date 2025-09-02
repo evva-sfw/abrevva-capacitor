@@ -24,6 +24,26 @@ jobs:
       - name: Run Build
         run: |
           cd ios
+
+          echo "Version:"
+          xcodebuild -version
+          xcode-select -p
+          xcrun --sdk iphonesimulator --show-sdk-path || true
+          xcrun --show-sdk-platform-path || true
+
+          echo "\nSDKs:"
+          xcodebuild -showsdks
+
+          echo "\nDevices:"
+          xcrun simctl list runtimes
+          xcrun simctl list devices
+
+          echo "\nPaths:"
+          echo "CPATH=$CPATH"
+          echo "C_INCLUDE_PATH=$C_INCLUDE_PATH"
+          echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
+          echo "SDKROOT=$SDKROOT"
+
           xcodebuild \
           -quiet \
           -workspace Plugin.xcworkspace \
