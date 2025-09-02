@@ -16,7 +16,7 @@ jobs:
       - name: Run Build
         run: npm run verify:web
   build_ios:
-    runs-on: macos-15
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup Capacitor iOS
