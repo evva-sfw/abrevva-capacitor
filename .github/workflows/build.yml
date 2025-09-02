@@ -29,7 +29,8 @@ jobs:
           -workspace Plugin.xcworkspace \
           -scheme Plugin \
           -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
+          -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5,arch=x86_64' \
+          ONLY_ACTIVE_ARCH=YES \
           clean build
   build_android:
     runs-on: ubuntu-latest
