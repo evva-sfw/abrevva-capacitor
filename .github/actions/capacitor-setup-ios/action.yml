@@ -15,7 +15,12 @@ runs:
     - name: Select Xcode
       uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
       with:
-        xcode-version: '15.4'
+        xcode-version: '16.4'
+      run: |
+        xcodebuild -version
+        xcode-select -p
+        xcrun --sdk iphonesimulator --show-sdk-path || true
+        xcrun --show-sdk-platform-path || true
     - name: Install Swift
       uses: SwiftyLab/setup-swift@5825efd16e0e9f41c4e9b94658b7973e16410d5b # v1.9.1
       with:
