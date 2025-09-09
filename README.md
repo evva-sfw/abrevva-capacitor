@@ -39,11 +39,17 @@ npm install @evva/abrevva-capacitor
 npx cap sync
 ```
 
-### Capacitor 6
+### iOS
+In your app add a `post_install` hook in your Podfile to resolve a nasty [CocoaPods limitation with XCFrameworks](https://github.com/CocoaPods/CocoaPods/issues/11079).
 
-```
-npm install @evva/abrevva-capacitor@4.0.1
-npx cap sync
+```ruby
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+    end
+  end   
+end
 ```
 
 ## Examples
