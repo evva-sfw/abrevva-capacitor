@@ -1,34 +1,28 @@
-ext {
-    junitVersion = project.hasProperty('junitVersion') ? rootProject.ext.junitVersion : '4.13.2'
-    androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.6.1'
-    androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.2.1'
-    androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.6.1'
-}
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 buildscript {
-    ext.kotlinVersion = project.hasProperty('kotlinVersion') ? rootProject.ext.kotlinVersion : '2.1.10'
-    ext.coreKtx = project.hasProperty('coreKtx') ? rootProject.ext.coreKtx : '1.15.0'
-
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.7.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "com.android.tools.build:gradle:${gradlePluginVersion}"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+apply from: 'variables.gradle'
+
 android {
     namespace "com.evva.xesar.abrevva.plugins.capacitor"
-    compileSdk project.hasProperty('compileSdk') ? rootProject.ext.compileSdk : 35
+    compileSdk = project.findProperty('compileSdk')
 
     defaultConfig {
-        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 29
-        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
+        minSdkVersion project.findProperty('minSdkVersion')
+        targetSdkVersion project.findProperty('targetSdkVersion')
 
         versionCode 1
         versionName "1.0"
@@ -45,11 +39,13 @@ android {
         abortOnError false
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_21
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
     }
     packagingOptions {
         resources.excludes.add("META-INF/*")
@@ -67,13 +63,12 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':capacitor-android')
-    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-    implementation "androidx.core:core-ktx:$coreKtx"
+    implementation "androidx.appcompat:appcompat:${androidxAppCompatVersion}"
+    implementation "androidx.core:core-ktx:${coreKtx}"
+    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "${abrevvaSdkVersion}"
 
-    implementation group: "com.evva.xesar", name: "abrevva-sdk-android", version: "3.2.3"
+    testImplementation "junit:junit:${junitVersion}"
 
-    testImplementation "junit:junit:$junitVersion"
-
-    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    androidTestImplementation "androidx.test.ext:junit:${androidxJunitVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${androidxEspressoCoreVersion}"
 }
