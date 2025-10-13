@@ -2,10 +2,10 @@ package com.evva.xesar.abrevva.plugins.capacitor
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.annotation.RequiresPermission
+import androidx.core.net.toUri
 import com.evva.xesar.abrevva.ble.BleDevice
 import com.evva.xesar.abrevva.ble.BleManager
 import com.evva.xesar.abrevva.ble.BleWriteType
@@ -189,7 +189,7 @@ class AbrevvaPluginBLE : Plugin() {
     @PluginMethod
     fun openAppSettings(call: PluginCall) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.data = Uri.parse("package:" + activity.packageName)
+        intent.data = ("package:" + activity.packageName).toUri()
 
         this.activity.startActivity(intent)
 
@@ -395,7 +395,8 @@ class AbrevvaPluginBLE : Plugin() {
         }
 
         GlobalScope.launch {
-            val success = device.setNotifications(characteristic.first,
+            val success = device.setNotifications(
+                characteristic.first,
                 characteristic.second, { data ->
                     val key =
                         "notification|${deviceId}|${(characteristic.first)}|${(characteristic.second)}"
@@ -445,7 +446,7 @@ class AbrevvaPluginBLE : Plugin() {
 
         try {
             serviceUUID = UUID.fromString(serviceString)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             call.reject("getCharacteristic(): invalid service uuid")
             return null
         }
@@ -460,7 +461,7 @@ class AbrevvaPluginBLE : Plugin() {
 
         try {
             characteristicUUID = UUID.fromString(characteristicString)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             call.reject("getCharacteristic(): invalid characteristic uuid")
             return null
         }
