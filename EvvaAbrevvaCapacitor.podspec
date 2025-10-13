@@ -16,10 +16,10 @@ TODO: Add long description of the pod here.
   s.source           = { :git => package['repository']['url'], :tag => s.version.to_s }
 
   s.platform = :ios
-  s.ios.deployment_target  = '15.0'
-  s.swift_version = '5.7'
+  s.ios.deployment_target  = '16.0'
+  s.swift_version = '5.10'
   s.source_files = 'ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}'
 
   s.dependency 'Capacitor'
-  s.dependency 'AbrevvaSDK', '~> 3.1.3'
+  s.dependency 'AbrevvaSDK', '~> 3.3.0'
 end
