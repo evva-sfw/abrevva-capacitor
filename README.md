@@ -23,12 +23,17 @@ The EVVA Abrevva Capacitor Plugin is a collection of tools to work with electron
 
 ## Requirements
 
-- Capacitor >= 5.0.0
-- Java 17+ (Android)
-- Android SDK (Android)
-- Android 10+ (API level 29) (Android)
-- Xcode 15.4 (iOS)
-- iOS 15.0+ (iOS)
+| Platform    | Version |
+|-------------|---------|
+| Capacitor   | 7+      | 
+| Java        | 17+     |
+| Android     | 11+     |
+| Android API | 30+     |
+| Kotlin      | 2.x     |
+| iOS         | 16.0+   |
+| Xcode       | 15.3+   |
+| Swift       | 5.10+   |
+
 
 ## Installation
 
