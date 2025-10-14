@@ -10,6 +10,8 @@
   "files": [
     "android/src/main/",
     "android/build.gradle",
+    "android/gradle.properties",
+    "android/variables.gradle",
     "dist/",
     "ios/Plugin/",
     "EvvaAbrevvaCapacitor.podspec",
