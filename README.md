@@ -23,12 +23,17 @@ The EVVA Abrevva Capacitor Plugin is a collection of tools to work with electron
 
 ## Requirements
 
-- Capacitor >= 5.0.0
-- Java 17+ (Android)
-- Android SDK (Android)
-- Android 10+ (API level 29) (Android)
-- Xcode 15.4 (iOS)
-- iOS 15.0+ (iOS)
+| Platform    | Version |
+|-------------|---------|
+| Capacitor   | 7+      | 
+| Java        | 17+     |
+| Android     | 11+     |
+| Android API | 30+     |
+| Kotlin      | 2.x     |
+| iOS         | 16.0+   |
+| Xcode       | 15.3+   |
+| Swift       | 5.10+   |
+
 
 ## Installation
 
@@ -39,11 +44,17 @@ npm install @evva/abrevva-capacitor
 npx cap sync
 ```
 
-### Capacitor 6
+### iOS
+In your app add a `post_install` hook in your Podfile to resolve a nasty [CocoaPods limitation with XCFrameworks](https://github.com/CocoaPods/CocoaPods/issues/11079).
 
-```
-npm install @evva/abrevva-capacitor@4.0.1
-npx cap sync
+```ruby
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+    end
+  end   
+end
 ```
 
 ## Examples

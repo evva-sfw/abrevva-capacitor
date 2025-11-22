@@ -160,7 +160,7 @@ class AbrevvaPluginCrypto : Plugin() {
                 )
             }
             pt = Hex.toHexString(data)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return call.reject(
                 AbrevvaPluginCrypto::class.simpleName,
                 CryptoError.DecryptCryptoError.name
