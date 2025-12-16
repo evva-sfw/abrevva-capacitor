@@ -141,17 +141,18 @@ const success = await AbrevvaBLEClient.signalize('deviceId');
 
 ### Disengage EVVA components
 
-For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired
-in the form of access media metadata from the Xesar software.
+For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired from the Xesar software.
+
+> Note: Since 6.1.0 the `mobileId` string can be passed as is, without sha256 hashing the input first.
 
 ```typescript
 const result = await AbrevvaBLEClient.disengageWithXvnResponse(
-  'deviceId',
-  'mobileId',
-  'mobileDeviceKey',
-  'mobileGroupId',
-  'mediumAccessData',
-  false,
+  'deviceId',         
+  'mobileId',         // `xsMobileId` string from medium blob data
+  'mobileDeviceKey',  // `xsMOBDK` string from medium blob data
+  'mobileGroupId',    // `xsMOBGID` string from medium blob data
+  'mediumAccessData', // `mediumDataFrame` string from medium blob data
+  false,              // office mode flag
 );
 
 console.log(`status=${result.status} xvnData=${result.xvnData}`)
