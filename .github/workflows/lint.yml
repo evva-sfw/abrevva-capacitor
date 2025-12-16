@@ -28,5 +28,5 @@ jobs:
           path: |
             node_modules
           key: node-modules
-      - run: npm ci
+      - run: npm i
       - run: npm run lint

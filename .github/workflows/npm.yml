@@ -24,4 +24,4 @@ jobs:
             test-app/node_modules
           key: node-modules
       - name: NPM Install
-        run: npm ci
+        run: npm i
