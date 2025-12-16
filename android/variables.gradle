@@ -3,7 +3,7 @@ ext {
     compileSdkVersion = 36
     targetSdkVersion = 36
 
-    abrevvaSdkVersion = '4.0.2'
+    abrevvaSdkVersion = '4.1.0'
 
     coreKtx = '1.17.0'
     androidxAppCompatVersion = '1.7.1'

@@ -4,17 +4,17 @@ import AbrevvaSDK
 
 @objc(AbrevvaPluginCodingStation)
 public class AbrevvaPluginCodingStation: CAPPlugin {
-    
+
     private var connectionOptions: MqttConnectionOptions?
     private let cs = CodingStation()
-    
+
     @objc
     func register(_ call: CAPPluginCall) {
         let url = call.getString("url")
         let clientId = call.getString("clientId")
         let username = call.getString("username")
         let password = call.getString("password")
-        
+
         if let _url = url, let _clientId = clientId, let _username = username, let _password = password {
             Task {
                 do {
@@ -28,7 +28,7 @@ public class AbrevvaPluginCodingStation: CAPPlugin {
             call.reject("register(): invalid params")
         }
     }
-    
+
     @objc
     func connect(_ call: CAPPluginCall) {
         if let connectionOptions = connectionOptions {

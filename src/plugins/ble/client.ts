@@ -49,6 +49,14 @@ export interface AbrevvaBLEClientInterface {
     mediumAccessData: string,
     isPermanentRelease: boolean,
   ): Promise<string>;
+  disengageWithXvnResponse(
+    deviceId: string,
+    mobileId: string,
+    mobileDeviceKey: string,
+    mobileGroupId: string,
+    mediumAccessData: string,
+    isPermanentRelease: boolean,
+  ): Promise<{ status: DisengageStatusType; xvnData?: string }>;
   startNotifications(
     deviceId: string,
     service: string,
@@ -274,6 +282,56 @@ class AbrevvaBLEClientClass implements AbrevvaBLEClientInterface {
         result = DisengageStatusType.Error;
       }
       return result;
+    });
+  }
+
+  async disengageWithXvnResponse(
+    deviceId: string,
+    mobileId: string,
+    mobileDeviceKey: string,
+    mobileGroupId: string,
+    mediumAccessData: string,
+    isPermanentRelease: boolean,
+    onConnect?: (address: string) => void,
+    onDisconnect?: (address: string) => void,
+  ): Promise<{ status: DisengageStatusType; xvnData?: string }> {
+    return await this.queue(async () => {
+      if (onConnect) {
+        await this.eventListeners.get(`connected|${deviceId}`)?.remove();
+        this.eventListeners.set(
+          `connected|${deviceId}`,
+          AbrevvaBLE.addListener(`connected|${deviceId}`, () => {
+            onConnect(deviceId);
+          }),
+        );
+      }
+      if (onDisconnect) {
+        await this.eventListeners.get(`disconnected|${deviceId}`)?.remove();
+        this.eventListeners.set(
+          `disconnected|${deviceId}`,
+          AbrevvaBLE.addListener(`disconnected|${deviceId}`, () => {
+            onDisconnect(deviceId);
+          }),
+        );
+      }
+
+      const response = await AbrevvaBLE.disengageWithXvnResponse({
+        deviceId,
+        mobileId,
+        mobileDeviceKey,
+        mobileGroupId,
+        mediumAccessData,
+        isPermanentRelease,
+      });
+
+      let status: DisengageStatusType;
+      if (Object.values(DisengageStatusType).some((val: string) => val === response.status)) {
+        status = <DisengageStatusType>response.status;
+      } else {
+        status = DisengageStatusType.Error;
+      }
+
+      return { status, xvnData: response.xvnData };
     });
   }
 
