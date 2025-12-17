@@ -61,8 +61,11 @@ jobs:
           git config user.name "${{ steps.import-gpg.outputs.name }}"
           git config user.email "${{ steps.import-gpg.outputs.email }}"
 
+      - name: Git Status
+        run: git status
+
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Authenticate with registry
         run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
