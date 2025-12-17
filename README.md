@@ -141,18 +141,21 @@ const success = await AbrevvaBLEClient.signalize('deviceId');
 
 ### Disengage EVVA components
 
-For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired
-in the form of access media metadata from the Xesar software.
+For the component disengage you have to provide access credentials to the EVVA component. Those are generally acquired from the Xesar software.
+
+> Note: Since 6.1.0 the `mobileId` string can be passed as is, without sha256 hashing the input first.
 
 ```typescript
-const status = await AbrevvaBLEClient.disengage(
-  'deviceId',
-  'mobileId',
-  'mobileDeviceKey',
-  'mobileGroupId',
-  'mediumAccessData',
-  false,
+const result = await AbrevvaBLEClient.disengageWithXvnResponse(
+  'deviceId',         
+  'mobileId',         // `xsMobileId` string from medium blob data
+  'mobileDeviceKey',  // `xsMOBDK` string from medium blob data
+  'mobileGroupId',    // `xsMOBGID` string from medium blob data
+  'mediumAccessData', // `mediumDataFrame` string from medium blob data
+  false,              // office mode flag
 );
+
+console.log(`status=${result.status} xvnData=${result.xvnData}`)
 ```
 
 There are several access status types upon attempting the component disengage.
@@ -216,6 +219,7 @@ export class ExampleClass {
 <docgen-index>
 
 * [Interfaces](#interfaces)
+* [Enums](#enums)
 
 </docgen-index>
 
@@ -250,6 +254,7 @@ export class ExampleClass {
 | **write**                     | (options: <a href="#writeoptions">WriteOptions</a> & <a href="#timeoutoptions">TimeoutOptions</a>) =&gt; Promise&lt;void&gt;                                                  |
 | **signalize**                 | (options: <a href="#signalizeoptions">SignalizeOptions</a>) =&gt; Promise&lt;void&gt;                                                                                         |
 | **disengage**                 | (options: <a href="#disengageoptions">DisengageOptions</a>) =&gt; Promise&lt;<a href="#stringresult">StringResult</a>&gt;                                                     |
+| **disengageWithXvnResponse**  | (options: <a href="#disengageoptions">DisengageOptions</a>) =&gt; Promise&lt;<a href="#disengageresult">DisengageResult</a>&gt;                                               |
 | **startNotifications**        | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                   |
 | **stopNotifications**         | (options: <a href="#readoptions">ReadOptions</a>) =&gt; Promise&lt;void&gt;                                                                                                   |
 
@@ -393,6 +398,14 @@ export class ExampleClass {
 | **`isPermanentRelease`** | <code>boolean</code> |
 
 
+#### DisengageResult
+
+| Prop          | Type                                                                |
+| ------------- | ------------------------------------------------------------------- |
+| **`status`**  | <code><a href="#disengagestatustype">DisengageStatusType</a></code> |
+| **`xvnData`** | <code>string</code>                                                 |
+
+
 #### AbrevvaCryptoInterface
 
 | Method                      | Signature                                                                                                                                           |
@@ -429,5 +442,34 @@ export class ExampleClass {
 | **`clientId`** | <code>string</code> |
 | **`username`** | <code>string</code> |
 | **`password`** | <code>string</code> |
+
+
+### Enums
+
+
+#### DisengageStatusType
+
+| Members                            | Value                                         |
+| ---------------------------------- | --------------------------------------------- |
+| **`Authorized`**                   | <code>"AUTHORIZED"</code>                     |
+| **`AuthorizedPermanentEngage`**    | <code>"AUTHORIZED_PERMANENT_ENGAGE"</code>    |
+| **`AuthorizedPermanentDisengage`** | <code>"AUTHORIZED_PERMANENT_DISENGAGE"</code> |
+| **`AuthorizedBatteryLow`**         | <code>"AUTHORIZED_BATTERY_LOW"</code>         |
+| **`AuthorizedOffline`**            | <code>"AUTHORIZED_OFFLINE"</code>             |
+| **`Unauthorized`**                 | <code>"UNAUTHORIZED"</code>                   |
+| **`UnauthorizedOffline`**          | <code>"UNAUTHORIZED_OFFLINE"</code>           |
+| **`SignalLocalization`**           | <code>"SIGNAL_LOCALIZATION"</code>            |
+| **`MediumDefectOnline`**           | <code>"MEDIUM_DEFECT_ONLINE"</code>           |
+| **`MediumBlacklisted`**            | <code>"MEDIUM_BLACKLISTED"</code>             |
+| **`Error`**                        | <code>"ERROR"</code>                          |
+| **`UnableToConnect`**              | <code>"UNABLE_TO_CONNECT"</code>              |
+| **`UnableToSetNotifications`**     | <code>"UNABLE_TO_SET_NOTIFICATIONS"</code>    |
+| **`UnableToReadChallenge`**        | <code>"UNABLE_TO_READ_CHALLENGE"</code>       |
+| **`UnableToWriteMDF`**             | <code>"UNABLE_TO_WRITE_MDF"</code>            |
+| **`AccessCipherError`**            | <code>"ACCESS_CIPHER_ERROR"</code>            |
+| **`BleAdapterDisabled`**           | <code>"BLE_ADAPTER_DISABLED"</code>           |
+| **`UnknownDevice`**                | <code>"UNKNOWN_DEVICE"</code>                 |
+| **`UnknownStatusCode`**            | <code>"UNKNOWN_STATUS_CODE"</code>            |
+| **`Timeout`**                      | <code>"TIMEOUT"</code>                        |
 
 </docgen-api>

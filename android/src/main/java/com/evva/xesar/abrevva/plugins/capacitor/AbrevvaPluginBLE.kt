@@ -11,6 +11,7 @@ import com.evva.xesar.abrevva.ble.BleManager
 import com.evva.xesar.abrevva.ble.BleWriteType
 import com.evva.xesar.abrevva.util.bytesToString
 import com.evva.xesar.abrevva.util.stringToBytes
+import com.evva.xesar.abrevva.util.toHexString
 import com.getcapacitor.JSObject
 import com.getcapacitor.Logger
 import com.getcapacitor.PermissionState
@@ -356,6 +357,7 @@ class AbrevvaPluginBLE : Plugin() {
 
     @PluginMethod
     @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    @Deprecated("Use disengageWithXvnResponse() instead.")
     fun disengage(call: PluginCall) {
         val deviceId = call.getString("deviceId", "")!!
         val mobileId = call.getString("mobileId", "")!!
@@ -377,6 +379,35 @@ class AbrevvaPluginBLE : Plugin() {
         ) { status ->
             val result = JSObject()
             result.put("value", status)
+
+            call.resolve(result)
+        }
+    }
+
+    @PluginMethod
+    @RequiresPermission(value = "android.permission.BLUETOOTH_CONNECT")
+    fun disengageWithXvnResponse(call: PluginCall) {
+        val deviceId = call.getString("deviceId", "")!!
+        val mobileId = call.getString("mobileId", "")!!
+        val mobileDeviceKey = call.getString("mobileDeviceKey", "")!!
+        val mobileGroupId = call.getString("mobileGroupId", "")!!
+        val mediumAccessData = call.getString("mediumAccessData", "")!!
+        val isPermanentRelease = call.getBoolean("isPermanentRelease", false)!!
+        val device = manager.getBleDevice(deviceId) ?: run {
+            return call.reject("disengage(): device not found")
+        }
+
+        manager.disengageWithXvnResponse(
+            device,
+            mobileId,
+            mobileDeviceKey,
+            mobileGroupId,
+            mediumAccessData,
+            isPermanentRelease
+        ) { status, xvnData ->
+            val result = JSObject()
+            result.put("status", status)
+            result.put("xvnData", xvnData?.toHexString())
 
             call.resolve(result)
         }

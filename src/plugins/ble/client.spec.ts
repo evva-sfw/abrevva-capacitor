@@ -42,6 +42,7 @@ jest.mock("./plugin", () => {
     write: jest.fn(),
     signalize: jest.fn(),
     disengage: jest.fn(),
+    disengageWithXvnResponse: jest.fn(),
     writeWithoutResponse: jest.fn(),
     startNotifications: jest.fn(),
     stopNotifications: jest.fn(),
@@ -273,11 +274,12 @@ describe("AbrevvaBLEClient", () => {
     (Capacitor.getPlatform as jest.Mock).mockReturnValue("android");
     expect(Capacitor.getPlatform()).toBe("android");
 
-    (AbrevvaBLE.disengage as jest.Mock).mockReturnValue({
-      value: DisengageStatusType.Authorized,
+    (AbrevvaBLE.disengageWithXvnResponse as jest.Mock).mockReturnValue({
+      status: DisengageStatusType.Authorized,
+      xvnData: "00FF",
     });
-    const result = await AbrevvaBLEClient.disengage(mockDevice.deviceId, "", "", "", "", false);
-    expect(AbrevvaBLE.disengage).toHaveBeenCalledWith({
+    const result = await AbrevvaBLEClient.disengageWithXvnResponse(mockDevice.deviceId, "", "", "", "", false);
+    expect(AbrevvaBLE.disengageWithXvnResponse).toHaveBeenCalledWith({
       deviceId: mockDevice.deviceId,
       mobileId: "",
       mobileDeviceKey: "",
@@ -285,7 +287,8 @@ describe("AbrevvaBLEClient", () => {
       mediumAccessData: "",
       isPermanentRelease: false,
     });
-    expect(result).toEqual(DisengageStatusType.Authorized);
+    expect(result.status).toEqual(DisengageStatusType.Authorized);
+    expect(result.xvnData).toEqual("00FF");
   });
 
   it("should run startNotifications", async () => {

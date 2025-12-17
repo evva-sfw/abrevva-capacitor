@@ -18,6 +18,7 @@ CAP_PLUGIN(AbrevvaPluginBLE, "AbrevvaPluginBLE",
     CAP_PLUGIN_METHOD(write, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(signalize, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(disengage, CAPPluginReturnPromise);
+    CAP_PLUGIN_METHOD(disengageWithXvnResponse, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(startNotifications, CAPPluginReturnPromise);
     CAP_PLUGIN_METHOD(stopNotifications, CAPPluginReturnPromise);
 )

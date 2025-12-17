@@ -92,6 +92,11 @@ export interface DisengageOptions {
   isPermanentRelease: boolean;
 }
 
+export interface DisengageResult {
+  status: DisengageStatusType;
+  xvnData?: string;
+}
+
 export enum DisengageStatusType {
   /// Component
   Authorized = "AUTHORIZED",
@@ -140,6 +145,7 @@ export interface AbrevvaBLEInterface {
   write(options: WriteOptions & TimeoutOptions): Promise<void>;
   signalize(options: SignalizeOptions): Promise<void>;
   disengage(options: DisengageOptions): Promise<StringResult>;
+  disengageWithXvnResponse(options: DisengageOptions): Promise<DisengageResult>;
   startNotifications(options: ReadOptions): Promise<void>;
   stopNotifications(options: ReadOptions): Promise<void>;
 }

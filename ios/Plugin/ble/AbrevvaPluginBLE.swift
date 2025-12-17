@@ -207,6 +207,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
     }
 
     @objc
+    @available(*, deprecated, message: "Use disengageWithXvnResponse() instead.")
     func disengage(_ call: CAPPluginCall) {
         guard self.getBleManager(call) != nil else { return }
         guard let device = self.getDevice(call, checkConnection: false) else { return }
@@ -217,7 +218,7 @@ public class AbrevvaPluginBLE: CAPPlugin {
         let isPermanentRelease = call.getBool("isPermanentRelease") ?? false
 
         Task {
-            let status = await self.bleManager!.disengage(
+            let response = await self.bleManager!.disengage(
                 device,
                 mobileID,
                 mobileDeviceKey,
@@ -225,7 +226,32 @@ public class AbrevvaPluginBLE: CAPPlugin {
                 mediumAccessData,
                 isPermanentRelease
             )
-            call.resolve(["value": status.rawValue])
+            call.resolve(["value": response.rawValue])
+        }
+    }
+
+    @objc
+    func disengageWithXvnResponse(_ call: CAPPluginCall) {
+        guard self.getBleManager(call) != nil else { return }
+        guard let device = self.getDevice(call, checkConnection: false) else { return }
+        let mobileID = call.getString("mobileId") ?? ""
+        let mobileDeviceKey = call.getString("mobileDeviceKey") ?? ""
+        let mobileGroupID = call.getString("mobileGroupId") ?? ""
+        let mediumAccessData = call.getString("mediumAccessData") ?? ""
+        let isPermanentRelease = call.getBool("isPermanentRelease") ?? false
+
+        Task {
+            let response = await self.bleManager!.disengageWithXvnResponse(
+                device,
+                mobileID,
+                mobileDeviceKey,
+                mobileGroupID,
+                mediumAccessData,
+                isPermanentRelease
+            )
+            let xvnData = response.1?.toHexString() ?? nil
+
+            call.resolve(["status": response.0.rawValue, "xvnData": xvnData as Any])
         }
     }
 
