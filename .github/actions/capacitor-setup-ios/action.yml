@@ -12,6 +12,21 @@ runs:
       with:
         ruby-version: '3.3'
         bundler-cache: true
+    - name: Select Xcode
+      uses: maxim-lobanov/setup-xcode@60606e260d2fc5762a71e64e74b2174e8ea3c8bd # v1.6.0
+      with:
+        xcode-version: '16.4'
+    - name: Xcode diagnostics
+      shell: bash
+      run: |
+        xcodebuild -version
+        xcode-select -p
+        xcrun --sdk iphonesimulator --show-sdk-path || true
+        xcrun --show-sdk-platform-path || true
+        echo "CPATH=$CPATH"
+        echo "C_INCLUDE_PATH=$C_INCLUDE_PATH"
+        echo "CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH"
+        echo "SDKROOT=$SDKROOT"
     - name: Install Swift
       uses: SwiftyLab/setup-swift@5825efd16e0e9f41c4e9b94658b7973e16410d5b # v1.9.1
       with:
