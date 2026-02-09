@@ -14,11 +14,9 @@
   <ion-grid>
     <ion-row *ngFor="let result of results">
       <ion-card style="width: 100%" (click)="disengage(result)">
-        <ion-card-header>
-          <ion-card-title style="text-align: center"
-            >{{ result.deviceId }}
-          </ion-card-title>
-        </ion-card-header>
+        <ion-card-content>
+          {{ result.advertisementData.manufacturerData.identifier }}
+        </ion-card-content>
       </ion-card>
     </ion-row>
   </ion-grid>
