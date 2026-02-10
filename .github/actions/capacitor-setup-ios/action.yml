@@ -37,7 +37,7 @@ runs:
         restore-keys: xcode-deriveddata
     - name: Npm Install
       shell: bash
-      run: npm i
+      run: npm ci
     - name: Pod Install
       shell: bash
       run: cd ios; pod install; cd -

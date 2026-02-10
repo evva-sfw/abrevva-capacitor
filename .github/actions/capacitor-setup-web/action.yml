@@ -16,4 +16,4 @@ runs:
         key: node-modules
     - name: Npm Install
       shell: bash
-      run: npm i
+      run: npm ci
