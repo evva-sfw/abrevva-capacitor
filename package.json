@@ -62,7 +62,7 @@
     "@babel/eslint-parser": "^7.28.4",
     "@babel/preset-env": "^7.28.3",
     "@capacitor/android": "^7.4.3",
-    "@capacitor/cli": "^7.4.3",
+    "@capacitor/cli": "^8.0.2",
     "@capacitor/core": "^7.4.3",
     "@capacitor/docgen": "^0.3.0",
     "@capacitor/ios": "^7.4.3",
