@@ -50,4 +50,4 @@ runs:
         key: avd-29
     - name: Npm Install
       shell: bash
-      run: npm i
+      run: npm ci
