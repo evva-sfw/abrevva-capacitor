@@ -18,7 +18,12 @@ public class AbrevvaPluginCodingStation: CAPPlugin {
         if let _url = url, let _clientId = clientId, let _username = username, let _password = password {
             Task {
                 do {
-                    connectionOptions = try await AuthManager.getMqttConfigForXS(url: URL(string: _url)!, clientId: _clientId, username: _username, password: _password)
+                    connectionOptions = try await AuthManager.getMqttConfigForXS(
+                        url: URL(string: _url)!,
+                        clientId: _clientId,
+                        username: _username,
+                        password: _password
+                    )
                     call.resolve()
                 } catch {
                     return call.reject("register(): failed to authenticate: \(error)")
