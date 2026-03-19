@@ -13,7 +13,7 @@ end
 target 'Plugin' do
   capacitor_pods
 
-  pod 'AbrevvaSDK', '~> 3.4.0'
+  pod 'AbrevvaSDK', '~> 3.4.2'
 end
 
 target 'PluginTests' do
