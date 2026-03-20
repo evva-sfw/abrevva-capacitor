@@ -1,14 +1,26 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ChangeDetectorRef } from "@angular/core";
 import { AbrevvaCrypto } from "@evva/abrevva-capacitor";
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonList,
+  IonText,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/angular/standalone";
 
 @Component({
   selector: "app-crypto",
   templateUrl: "./crypto.component.html",
   styleUrls: ["./crypto.component.css"],
+  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonList, IonText, IonButton],
 })
 export class CryptoComponent {
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   output = "";
   funcName = "";

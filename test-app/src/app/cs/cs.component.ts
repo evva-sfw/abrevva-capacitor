@@ -1,10 +1,21 @@
 import { Component } from "@angular/core";
 import { AbrevvaCodingStation } from "@evva/abrevva-capacitor";
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonList,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/angular/standalone";
 
 @Component({
   selector: "app-cs",
   templateUrl: "./cs.component.html",
   styleUrls: ["./cs.component.css"],
+  imports: [IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonList, IonButton],
 })
 export class CodingStationComponent {
   async register() {

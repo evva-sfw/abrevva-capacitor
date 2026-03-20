@@ -10,8 +10,15 @@ import { CryptoComponent } from "./crypto/crypto.component";
 import { CodingStationComponent } from "./cs/cs.component";
 
 @NgModule({
-  declarations: [AppComponent, CryptoComponent, BleComponent, CodingStationComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    CryptoComponent,
+    BleComponent,
+    CodingStationComponent,
+  ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
