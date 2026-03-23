@@ -12,10 +12,6 @@ runs:
       with:
         ruby-version: '3.3'
         bundler-cache: true
-    - name: Install Swift
-      uses: SwiftyLab/setup-swift@5825efd16e0e9f41c4e9b94658b7973e16410d5b # v1.9.1
-      with:
-        swift-version: '5.10.0'
     - name: Cache node_modules
       id: node-modules
       uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4.2.1
