@@ -1,14 +1,42 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { ChangeDetectorRef } from "@angular/core";
 import { AbrevvaBLEClient, BleDevice } from "@evva/abrevva-capacitor";
+import {
+  IonBackButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonRefresher,
+  IonRefresherContent,
+  IonRow,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/angular/standalone";
 
 @Component({
   selector: "app-ble",
   templateUrl: "./ble.component.html",
   styleUrls: ["./ble.component.css"],
+  imports: [
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    IonContent,
+    IonRefresher,
+    IonRefresherContent,
+    IonGrid,
+    IonRow,
+    IonCard,
+    IonCardContent,
+  ],
 })
 export class BleComponent implements OnInit {
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   results: BleDevice[] = [];
 

@@ -6,5 +6,11 @@ module.exports = {
     `${process.cwd()}/test-app/node_modules`,
     `${process.cwd()}/test-app/ios/App/Pods`,
   ],
-  disabled_rules: ["identifier_name", "force_unwrapping", "type_body_length", "function_default_parameter_at_end"],
+  disabled_rules: [
+    "identifier_name",
+    "force_unwrapping",
+    "type_body_length",
+    "function_default_parameter_at_end",
+    "file_length",
+  ],
 };

@@ -21,6 +21,10 @@
         "strict": true,
         "target": "ES2022"
     },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.spec.ts"
+    ],
     "files": [
         "src/index.ts"
     ]

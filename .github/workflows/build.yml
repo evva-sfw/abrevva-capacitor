@@ -16,21 +16,20 @@ jobs:
       - name: Run Build
         run: npm run verify:web
   build_ios:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup Capacitor iOS
         uses: ./.github/actions/capacitor-setup-ios
       - name: Run Build
-        env:
-          DEVELOPER_DIR: /Applications/Xcode_15.4.app
         run: |
           cd ios
+          DEST_ID=$(xcrun simctl list devices available | grep "iPhone 16" | sed -E 's/.*\(([-0-9A-F]+)\).*/\1/' | head -n 1); \
           xcodebuild \
           -quiet \
           -workspace Plugin.xcworkspace \
           -scheme Plugin \
-          -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.4'
+          -destination "platform=iOS Simulator,id=$DEST_ID"
   build_android:
     runs-on: ubuntu-latest
     steps:
